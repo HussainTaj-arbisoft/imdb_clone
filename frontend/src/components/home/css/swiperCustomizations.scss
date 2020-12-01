@@ -1,0 +1,29 @@
+.swiper-button-next,
+.swiper-button-prev {
+    &:after {
+        font-family: FontAwesome;
+        font-weight: 900;
+        color: white;
+        position: relative;
+        text-shadow: 0 0 20px #585858;
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.40);
+        // border: 2px solid rgba(255, 255, 255, 0.40);
+        border-radius: 6px;
+
+    }
+
+    &:hover:after {
+        color: #F5C518;
+    }
+}
+
+.swiper-button-next:after {
+    content: '\f054';
+    right: 10px;
+}
+
+.swiper-button-prev:after {
+    content: '\f053';
+    left: 10px;
+}

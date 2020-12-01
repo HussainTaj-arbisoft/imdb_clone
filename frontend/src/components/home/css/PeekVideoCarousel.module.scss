@@ -1,0 +1,49 @@
+.peekVideoCarousel :global(.swiper-slide-item:after) {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.938) 100%);
+}
+
+.peekVideoCarousel {
+    position: relative;
+
+    & :global(.swiper-slide-caption) {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 10px;
+        z-index: 5;
+    }
+}
+
+.peekVideoCarouselNextSidebar {
+    max-height: 85%;
+    background: linear-gradient(to bottom, #121212 0%, transparent 100%);
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.circlePlayIcon {
+    height: 100px;
+    width: 100px;
+    padding-right: 20px;
+
+    &:hover :global(#logoCirclePlay) {
+        fill: #F5C518;
+    }
+}
+
+:global(#logoCirclePlay) {
+    fill: white;
+}
