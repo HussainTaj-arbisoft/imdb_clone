@@ -32,12 +32,19 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # Default
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # Third Party
+    "rest_framework",
+    "rest_framework.authtoken",
+    "djoser",
+    # Custom
+    "accounts.apps.AccountsConfig",
 ]
 
 MIDDLEWARE = [
@@ -125,3 +132,21 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "../frontend/build/static"),
     os.path.join(BASE_DIR, "../frontend/build"),
 ]
+
+
+AUTH_USER_MODEL = "accounts.User"
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.TokenAuthentication",
+    ),
+}
+
+DJOSER = {
+    "LOGIN_FIELD": "email",
+    "USER_CREATE_PASSWORD_RETYPE": True,
+    "SERIALIZERS": {
+        "user_create": "accounts.serializers.UserCreateSerializer",
+        "user": "accounts.serializers.UserCreateSerializer",
+    },
+}
