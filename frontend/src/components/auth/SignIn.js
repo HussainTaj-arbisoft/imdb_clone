@@ -1,0 +1,130 @@
+import React, { Component } from 'react'
+import { Formik, Field, Form } from 'formik';
+import { connect } from 'react-redux';
+import { Link, Redirect } from 'react-router-dom';
+
+
+import * as authActions from '../../store/actions/authActions';
+import logo from '../../logo.svg';
+
+
+class SignIn extends Component {
+    onSubmit = (values, { setSubmitting }) => {
+        this.props.signIn(values['email'], values['password']);
+    }
+    _renderForm = () => {
+        if (this.props.isSigningIn) {
+            return (
+                <div className="text-center">
+                    <i className="fa fa-circle-o-notch fa-spin fa-3x fa-fw text-primary"></i>
+                    <div>Signing in...</div>
+                </div>
+            )
+        }
+        return (
+            <Form>
+                <div className="form-group">
+                    <label htmlFor="email" className="form-label">Email</label>
+                    <Field
+                        id="email"
+                        name="email"
+                        placeholder="someone@example.com"
+                        type="email"
+                        className="form-control form-control-sm"
+                        required="required"
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="password" className="form-label">Password</label>
+                    <Field
+                        id="password"
+                        name="password"
+                        type="password"
+                        className="form-control form-control-sm"
+                        required="required"
+                    />
+                </div>
+                <div className="text-center">
+                    <button type="submit" className="btn btn-primary">Sign In</button>
+                </div>
+                {
+                    this.props.status ? (
+                        this._renderStatusCodeMessage()
+                    ) :
+                        (null)
+                }
+                <div className="text-center mt-2">
+                    <Link to="/auth/signup" className="text-info">
+                        Don't have an account? Create new.
+                    </Link>
+                </div>
+            </Form>
+        )
+    }
+
+    _renderStatusCodeMessage = () => {
+        switch (this.props.status) {
+            case 200:
+                return null;
+            case 400:
+                return (
+                    <div className="text-danger text-center pt-4">
+                        Email or password was incorrect.
+                    </div>
+                );
+            default:
+                return this.props.statusText;
+        }
+    }
+
+    render() {
+        if (this.props.isAuthenticated)
+            return <Redirect to="/" />
+
+        const initialFormValues = {
+            email: '',
+            password: '',
+        };
+        return (
+            <div className="container p-4">
+                <div className="text-center">
+                    <Link to="/">
+                        <img src={logo} alt="logo" className="center-block" height="50" />
+                    </Link>
+                </div>
+                <div className="row">
+                    <div className="col-lg-3 col-md-2"></div>
+                    <div className="col-lg-6 col-md-8 col-12">
+                        <div className="card m-4 p-4">
+                            <div className="card-bdoy">
+                                <div className="text-center">
+                                    <h1 className="display-6">Sign In</h1>
+                                </div>
+                                <Formik
+                                    initialValues={initialFormValues}
+                                    onSubmit={this.onSubmit}>
+                                    {this._renderForm()}
+                                </Formik>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-lg-3 col-md-2"></div>
+                </div>
+            </div>
+        )
+    }
+}
+
+
+const mapStateToProps = (state) => {
+    return {
+        ...state.auth.signIn,
+        isAuthenticated: state.auth.isAuthenticated
+    }
+};
+
+const signInActions = ({
+    signIn: authActions.signIn,
+});
+
+export default connect(mapStateToProps, signInActions)(SignIn);
