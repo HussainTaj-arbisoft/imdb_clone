@@ -35,7 +35,7 @@ const signUpRequest = () => {
 }
 
 export const signInWithTokenCookieIfExists = () => dispatch => {
-    let token = cookies.get("token");
+    let token = cookies.get("token", { path: "/" });
     if (token) {
         signInWithToken(token)(dispatch);
     }
@@ -54,7 +54,7 @@ export const signInWithToken = (token) => dispatch => {
     ).then(
         (response) => {
             let { status, statusText, data } = response;
-            cookies.set("token", token);
+            cookies.set("token", token, { path: "/" });
             dispatch({
                 type: types.AUTH_SIGNIN_RESPONSE,
                 payload: {
@@ -72,7 +72,7 @@ export const signInWithToken = (token) => dispatch => {
         }
     ).catch(({ response }) => {
         let { status, statusText, data } = response;
-        cookies.remove("token");
+        cookies.remove("token", { path: "/" });
         dispatch({
             type: types.AUTH_SIGNIN_RESPONSE,
             payload: {
@@ -169,7 +169,7 @@ export const signOut = (authToken) => dispatch => {
             }
         }
     ).then((response) => {
-        cookies.remove("token");
+        cookies.remove("token", { path: "/" });
         dispatch({
             type: types.AUTH_SIGNOUT,
             payload: {
