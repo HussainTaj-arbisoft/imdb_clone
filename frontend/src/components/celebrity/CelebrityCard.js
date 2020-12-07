@@ -9,7 +9,7 @@ export default function CelebrityCard(props) {
                 className="rounded-circle mb-2"
                 height='150'
                 width='150'
-                style={{ objectFit: 'cover' }}
+                style={{ objectFit: 'cover', objectPosition: 'top' }}
             />
             <h2>{props.name}</h2>
             <p>{props.age}</p>

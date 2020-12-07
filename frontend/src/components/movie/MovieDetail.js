@@ -8,9 +8,9 @@ import { connect } from 'react-redux'
 import '../layout/css/swiperCustomizations.scss'
 import * as movieActions from './../../store/actions/movieActions'
 import Header from '../layout/Header';
-import CircularProgressIndicator from '../layout/CircularProgressIndicator'
 
 import parseTuple from '../../utilities/tuple'
+import StatusBasedComponent from '../layout/StatusBasedComponent';
 
 SwiperCore.use([Lazy, Navigation, A11y]);
 
@@ -114,25 +114,27 @@ class MovieDetail extends Component {
         )
     }
     render() {
-        let movie = this.props.detail;
+        let movie = this.props.movieData;
         let status = this.props.status;
         let content;
         if (movie === undefined || status === undefined) {
             content = <p>Nothing to show yet.</p>;
         }
-        if (status === "loading") {
-            content = <CircularProgressIndicator bottomText="Loading..." />;
-        }
-        if (status === "error") {
-            content = <p>{this.props.errorCode} {this.props.errorMessage}</p>;
-        }
-        if (status === "loaded") {
+        else {
             content = this._renderDetail();
         }
         return (
             <div>
                 <Header />
-                {content}
+                <StatusBasedComponent
+                    loadingText={"Loading..."}
+                    status={this.props.status}
+                    statusCode={this.props.statusCode}
+                    statusText={this.props.statusText}
+                    errorMessage={this.props.errorMessage}
+                >
+                    {content}
+                </StatusBasedComponent>
             </div>
         );
 

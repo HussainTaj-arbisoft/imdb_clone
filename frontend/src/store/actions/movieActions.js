@@ -11,7 +11,7 @@ const listPeekMoviesRequest = () => {
     return {
         type: types.MOVIE_PEEK_LIST_REQUEST,
         payload: {
-            peeksStatus: 'loading'
+            status: 'loading'
         }
     }
 }
@@ -25,7 +25,7 @@ export const listPeekMovies = () => dispatch => {
                 payload: {
                     peeks: response.data.results,
                     nextPeeksUrl: response.data.next,
-                    peeksStatus: 'loaded'
+                    status: 'loaded'
                 }
             })
         }
@@ -34,7 +34,10 @@ export const listPeekMovies = () => dispatch => {
             type: types.MOVIE_PEEK_LIST_RESPONSE,
             payload: {
                 peeks: [],
-                peeksStatus: 'error'
+                status: 'error',
+                statusCode: response.status,
+                statusText: response.statusText,
+                errorMessage: response.data.detail
             }
         })
     });
@@ -44,10 +47,8 @@ const detailMovieRequest = (movie_id) => {
     return {
         type: types.MOVIE_DETAIL_REQUEST,
         payload: {
-            detail: {
-                status: 'loading',
-                movie_id: movie_id
-            }
+            status: 'loading',
+            movie_id: movie_id
         }
     }
 }
@@ -66,11 +67,9 @@ export const detailMovie = (movie_id) => dispatch => {
             dispatch({
                 type: types.MOVIE_DETAIL_RESPONSE,
                 payload: {
-                    detail: {
-                        movieData: responseMovie.data,
-                        crewData: responseCrew.data,
-                        status: "loaded"
-                    }
+                    movieData: responseMovie.data,
+                    crewData: responseCrew.data,
+                    status: "loaded"
                 }
             })
         }
@@ -80,11 +79,10 @@ export const detailMovie = (movie_id) => dispatch => {
         dispatch({
             type: types.MOVIE_DETAIL_RESPONSE,
             payload: {
-                detail: {
-                    status: "error",
-                    errorCode: response.status,
-                    errorMessage: (response.data.detail ? response.data.detail : response.statusText)
-                }
+                status: "error",
+                statusCode: response.status,
+                statusText: response.statusText,
+                errorMessage: response.data.detail
             }
         })
     });

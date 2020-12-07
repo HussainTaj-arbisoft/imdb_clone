@@ -5,7 +5,7 @@ export default function CircularProgressIndicator(props) {
         <div>
             <div className="text-center">
                 <i className="fa fa-circle-o-notch fa-spin fa-3x fa-fw text-primary"></i>
-                <div>{props.bottomText}</div>
+                <p>{props.bottomText}</p>
             </div>
         </div>
     )

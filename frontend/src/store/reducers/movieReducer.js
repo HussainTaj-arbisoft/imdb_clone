@@ -68,11 +68,17 @@ const movieReducer = (state = initialState, action) => {
     switch (action.type) {
         case types.MOVIE_PEEK_LIST_REQUEST:
         case types.MOVIE_PEEK_LIST_RESPONSE:
+            return Object.assign({}, state, {
+                peeks: {
+                    ...action.payload
+                }
+            });
         case types.MOVIE_DETAIL_REQUEST:
         case types.MOVIE_DETAIL_RESPONSE:
-            return Object.assign({}, {
-                ...state,
-                ...action.payload
+            return Object.assign({}, state, {
+                detail: {
+                    ...action.payload
+                }
             });
         default:
             return state;

@@ -11,8 +11,8 @@ import styles from './css/PeekVideoCarousel.module.scss'
 import '../layout/css/swiperCustomizations.scss'
 
 import * as movieActions from './../../store/actions/movieActions'
-import CircularProgressIndicator from '../layout/CircularProgressIndicator';
 import { Link } from 'react-router-dom';
+import StatusBasedComponent from '../layout/StatusBasedComponent';
 
 
 SwiperCore.use([Navigation, A11y, Controller]);
@@ -20,7 +20,6 @@ SwiperCore.use([Navigation, A11y, Controller]);
 class MoviePeeksCarousel extends Component {
     state = {
         controlledSwiper: null,
-        movies: []
     }
 
     componentDidMount() {
@@ -34,9 +33,10 @@ class MoviePeeksCarousel extends Component {
 
     _renderUpNextSwiper() {
         let upNextSwiperMovies = [];
-        if (this.props.movies && this.props.movies.length > 0) {
-            upNextSwiperMovies = this.props.movies.slice(1);
-            upNextSwiperMovies.push({ ...(this.props.movies[0]) });
+        let movies = this.props.peeks;
+        if (movies && movies.length > 0) {
+            upNextSwiperMovies = movies.slice(1);
+            upNextSwiperMovies.push({ ...(movies[0]) });
         }
 
         return (
@@ -75,6 +75,7 @@ class MoviePeeksCarousel extends Component {
     }
 
     _renderPeekVideoSwiper() {
+        let movies = this.props.peeks;
         let playCircleIconButton = (
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
                 className={`${styles.circlePlayIcon}`}
@@ -98,12 +99,12 @@ class MoviePeeksCarousel extends Component {
                 controller={{ control: this.state.controlledSwiper }}
                 spaceBetween={20}
                 slidesPerView={1} id="peekVideoCarousel"
-                loopedSlides={this.props.movies.length}
+                loopedSlides={movies.length}
                 loop={true}
 
                 className={`${styles.peekVideoCarousel}`}>
                 {
-                    this.props.movies.map((movie) => {
+                    movies.map((movie) => {
                         let duration = 0;
                         if (movie.trailers && movie.trailers.length > 0)
                             duration = movie.trailers[0].duration;
@@ -137,35 +138,43 @@ class MoviePeeksCarousel extends Component {
     }
 
     render() {
-        if (this.props.peeksStatus === "loading")
-            return <CircularProgressIndicator bottomText="Loading your peeks..." />
-        if (this.props.peeksStatus === "error")
-            return <p className="text-light p-4">There was an error retrieving content.</p>
-
-        if (!this.props.movies || this.props.movies.length === 0)
-            return <p className="text-light p-4">Nothing to show.</p>
-
-        let upNextSwiper = this._renderUpNextSwiper();
-        let peekVideoSwiper = this._renderPeekVideoSwiper();
+        let movies = this.props.peeks;
+        let content;
+        if (!movies || movies.length === 0)
+            content = <p className="text-center p-4">Nothing to show.</p>
+        else {
+            let upNextSwiper = this._renderUpNextSwiper();
+            let peekVideoSwiper = this._renderPeekVideoSwiper();
+            content = (
+                <div className="row pt-4 text-light text-left">
+                    <div className="col-lg-8 col-md-12">
+                        {peekVideoSwiper}
+                    </div>
+                    <div className="col-lg-4 d-none d-lg-block" >
+                        <h2 className="text-primary">Up Next</h2>
+                        {upNextSwiper}
+                    </div>
+                </div>
+            );
+        }
 
         return (
-            <div className="row pt-4 text-light text-left">
-                <div className="col-lg-8 col-md-12">
-                    {peekVideoSwiper}
-                </div>
-                <div className="col-lg-4 d-none d-lg-block" >
-                    <h2 className="text-primary">Up Next</h2>
-                    {upNextSwiper}
-                </div>
-            </div>
+            <StatusBasedComponent
+                loadingText={"Loading your peeks..."}
+                status={this.props.status}
+                statusCode={this.props.statusCode}
+                statusText={this.props.statusText}
+                errorMessage={this.props.errorMessage}
+            >
+                {content}
+            </StatusBasedComponent>
         )
     }
 }
 
 const mapStateToProps = (state) => {
     return {
-        movies: state.movies.peeks,
-        peeksStatus: state.movies.peeksStatus
+        ...state.movies.peeks
     }
 };
 
