@@ -28,5 +28,8 @@ class Celebrity(models.Model):
         upload_to=_get_celebrity_image_url,
     )
 
+    class Meta:
+        ordering = ("-popularity_score",)
+
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
