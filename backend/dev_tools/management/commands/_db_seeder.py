@@ -19,7 +19,7 @@ vesci venturi, pharetras et medio, labitur iam manant nubila, ne tum.
 
 
 def _random_date(
-    start_date=make_aware(datetime.datetime(2020, 1, 1)),
+    start_date=make_aware(datetime.datetime(1990, 1, 1)),
     end_date=make_aware(datetime.datetime.today()),
 ):
     time_between_dates = end_date - start_date
