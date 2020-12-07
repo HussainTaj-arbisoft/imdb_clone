@@ -21,6 +21,8 @@ class UserManager(BaseUserManager):
         user = self.create_user(
             email,
             password=password,
+            first_name=first_name,
+            last_name=last_name,
         )
         user.is_admin = True
         user.save(using=self._db)
@@ -31,6 +33,7 @@ class User(AbstractUser):
     email = models.EmailField(
         verbose_name="Email", max_length=255, unique=True
     )
+    is_admin = models.BooleanField(default=False)
     REQUIRED_FIELDS = ["first_name", "last_name"]
     USERNAME_FIELD = "email"
     objects = UserManager()
@@ -41,3 +44,13 @@ class User(AbstractUser):
     def save(self, *args, **kwargs):
         self.username = self.email
         super(User, self).save(*args, **kwargs)
+
+    def has_perm(self, perm, obj=None):
+        return True
+
+    def has_module_perms(self, app_label):
+        return True
+
+    @property
+    def is_staff(self):
+        return self.is_admin
