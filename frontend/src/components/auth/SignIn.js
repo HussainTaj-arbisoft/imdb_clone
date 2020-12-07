@@ -6,6 +6,7 @@ import { Link, Redirect } from 'react-router-dom';
 
 import * as authActions from '../../store/actions/authActions';
 import logo from '../../logo.svg';
+import CircularProgressIndicator from '../layout/CircularProgressIndicator';
 
 
 class SignIn extends Component {
@@ -14,12 +15,7 @@ class SignIn extends Component {
     }
     _renderForm = () => {
         if (this.props.isSigningIn) {
-            return (
-                <div className="text-center">
-                    <i className="fa fa-circle-o-notch fa-spin fa-3x fa-fw text-primary"></i>
-                    <div>Signing in...</div>
-                </div>
-            )
+            return <CircularProgressIndicator bottomText="Signing In..." />
         }
         return (
             <Form>
