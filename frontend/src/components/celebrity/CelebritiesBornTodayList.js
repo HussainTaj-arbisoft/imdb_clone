@@ -6,7 +6,7 @@ import SwiperCore, { Navigation, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.min.css'
 
-import './css/swiperCustomizations.scss'
+import '../layout/css/swiperCustomizations.scss'
 import * as celebrityActions from './../../store/actions/celebrityActions'
 
 import CelebrityCard from './CelebrityCard'
