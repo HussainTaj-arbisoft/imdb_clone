@@ -11,6 +11,8 @@ import styles from './css/PeekVideoCarousel.module.scss'
 import './css/swiperCustomizations.scss'
 
 import * as movieActions from './../../store/actions/movieActions'
+import CircularProgressIndicator from '../layout/CircularProgressIndicator';
+import { Link } from 'react-router-dom';
 
 
 SwiperCore.use([Navigation, A11y, Controller]);
@@ -22,6 +24,7 @@ class MoviePeeksCarousel extends Component {
     }
 
     componentDidMount() {
+        this.setControlledSwiper(null);
         this.props.listPeekMovies();
     }
 
@@ -29,13 +32,49 @@ class MoviePeeksCarousel extends Component {
         this.setState({ controlledSwiper: controlledSwiper });
     }
 
-    render() {
+    _renderUpNextSwiper() {
         let upNextSwiperMovies = [];
-        if (this.props.movies) {
+        if (this.props.movies && this.props.movies.length > 0) {
             upNextSwiperMovies = this.props.movies.slice(1);
             upNextSwiperMovies.push({ ...(this.props.movies[0]) });
         }
 
+        return (
+            <Swiper
+                direction="vertical"
+                spaceBetween={20}
+                slidesPerView={'auto'} id="peekVideoCarouselNextSidebar"
+                onSwiper={this.setControlledSwiper}
+                loopedSlides={upNextSwiperMovies.length}
+                loop={true}
+                initialSlide={1}
+                allowTouchMove={false}
+                className={`${styles.peekVideoCarouselNextSidebar} position-absolute w-100`}>
+                {
+                    upNextSwiperMovies.map((movie) => {
+                        let duration = 0;
+                        if (movie.trailers && movie.trailers.length > 0)
+                            duration = movie.trailers[0].duration;
+                        return (
+                            <SwiperSlide className="d-flex p-2" key={movie.id}>
+                                <Link to={`/movie/${movie.id}`}>
+                                    <img src={movie.poster_image} alt="Poster" height='100' />
+                                </Link>
+                                <div className="p-2">
+                                    <span className="fa fa-play-circle"></span>
+                                    <small className="text-light pl-2">{duration}</small>
+                                    <h5>{movie.title}</h5>
+                                    <p>{movie.tagline}</p>
+                                </div>
+                            </SwiperSlide>
+                        )
+                    })
+                }
+            </Swiper>
+        );
+    }
+
+    _renderPeekVideoSwiper() {
         let playCircleIconButton = (
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
                 className={`${styles.circlePlayIcon}`}
@@ -50,34 +89,7 @@ class MoviePeeksCarousel extends Component {
                 </g>
             </svg>
         );
-
-        let upNextSwiper = (
-            <Swiper
-                direction="vertical"
-                spaceBetween={20}
-                slidesPerView={'auto'} id="peekVideoCarouselNextSidebar"
-                onSwiper={this.setControlledSwiper}
-                loopedSlides={upNextSwiperMovies.length}
-                loop={true}
-                initialSlide={1}
-                allowTouchMove={false}
-                className={`${styles.peekVideoCarouselNextSidebar} position-absolute`}>
-                {
-                    upNextSwiperMovies.map((video) => (
-                        <SwiperSlide className="d-flex p-2" key={video.id}>
-                            <img src={video.posterUrl} alt="Poster" height='100' />
-                            <div className="p-2">
-                                <span className="fa fa-play-circle"></span>
-                                <small className="text-light pl-2">{video.trailerDuration}</small>
-                                <h5>{video.title}</h5>
-                                <p>{video.subTitle}</p>
-                            </div>
-                        </SwiperSlide>
-                    ))
-                }
-            </Swiper>
-        );
-        let peekVideoSwiper = (
+        return (
             <Swiper
                 navigation={{
                     nextEl: '.swiper-button-next',
@@ -91,51 +103,69 @@ class MoviePeeksCarousel extends Component {
 
                 className={`${styles.peekVideoCarousel}`}>
                 {
-                    this.props.movies.map((video) => (
-                        <SwiperSlide className="swiper-slide-item" key={video.id}>
-                            <img className="d-block w-100" src={video.billboardImageUrl} alt={video.title} />
-                            <div className="d-flex align-items-end swiper-slide-caption">
-                                <img src={video.posterUrl} alt="Poster" height='150' />
-                                <div className="px-4 w-100 d-flex align-items-center">
-                                    {playCircleIconButton}
-                                    <div>
-                                        <h1>{video.title}
-                                            <small className="text-secondary pl-2">{video.trailerDuration}</small>
-                                        </h1>
-                                        <p>{video.subTitle}</p>
+                    this.props.movies.map((movie) => {
+                        let duration = 0;
+                        if (movie.trailers && movie.trailers.length > 0)
+                            duration = movie.trailers[0].duration;
+                        return (
+                            <SwiperSlide className="swiper-slide-item" key={movie.id}>
+                                <Link
+                                    to={`/movie/${movie.id}`}
+                                    className="text-light">
+                                    <img className="d-block w-100" src={movie.cover_image} alt={movie.title} />
+                                    <div className="d-flex align-items-end swiper-slide-caption">
+                                        <img src={movie.poster_image} alt="Poster" height='150' />
+                                        <div className="px-4 w-100 d-flex align-items-center">
+                                            {playCircleIconButton}
+                                            <div>
+                                                <h1>{movie.title}
+                                                    <small className="text-secondary pl-2">{duration}</small>
+                                                </h1>
+                                                <p>{movie.tagline}</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        </SwiperSlide>
-                    ))
+                                </Link>
+                            </SwiperSlide>
+                        )
+                    })
                 }
                 <span className="swiper-button-next"></span>
                 <span className="swiper-button-prev"></span>
             </Swiper>
         );
+    }
 
+    render() {
+        if (this.props.peeksStatus === "loading")
+            return <CircularProgressIndicator bottomText="Loading your peeks..." />
+        if (this.props.peeksStatus === "error")
+            return <p className="text-light p-4">There was an error retrieving content.</p>
 
+        if (!this.props.movies || this.props.movies.length === 0)
+            return <p className="text-light p-4">Nothing to show.</p>
 
-        if (this.props.movies)
-            return (
-                <div className="row pt-4 text-light text-left">
-                    <div className="col-lg-8 col-md-12">
-                        {peekVideoSwiper}
-                    </div>
-                    <div className="col-lg-4 d-none d-lg-block" >
-                        <h2 className="text-primary">Up Next</h2>
-                        {upNextSwiper}
-                    </div>
+        let upNextSwiper = this._renderUpNextSwiper();
+        let peekVideoSwiper = this._renderPeekVideoSwiper();
+
+        return (
+            <div className="row pt-4 text-light text-left">
+                <div className="col-lg-8 col-md-12">
+                    {peekVideoSwiper}
                 </div>
-            )
-        else
-            return (<p className="p-4 text-primary">Loading...</p>)
+                <div className="col-lg-4 d-none d-lg-block" >
+                    <h2 className="text-primary">Up Next</h2>
+                    {upNextSwiper}
+                </div>
+            </div>
+        )
     }
 }
 
 const mapStateToProps = (state) => {
     return {
-        movies: state.movies.peeks
+        movies: state.movies.peeks,
+        peeksStatus: state.movies.peeksStatus
     }
 };
 
