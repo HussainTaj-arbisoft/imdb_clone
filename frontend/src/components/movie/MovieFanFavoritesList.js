@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import './css/swiperCustomizations.scss'
+import '../layout/css/swiperCustomizations.scss'
 import * as movieActions from './../../store/actions/movieActions'
 
 import MoviePosterSwiper from './MoviePosterSwiper'

@@ -5,7 +5,7 @@ import SwiperCore, { Navigation, A11y, Lazy } from 'swiper';
 import FsLightbox from 'fslightbox-react';
 import { connect } from 'react-redux'
 
-import './css/swiperCustomizations.scss'
+import '../layout/css/swiperCustomizations.scss'
 import * as movieActions from './../../store/actions/movieActions'
 import Header from '../layout/Header';
 import CircularProgressIndicator from '../layout/CircularProgressIndicator'

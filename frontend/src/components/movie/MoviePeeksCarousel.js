@@ -8,7 +8,7 @@ import 'bootstrap/dist/js/bootstrap.bundle'
 
 
 import styles from './css/PeekVideoCarousel.module.scss'
-import './css/swiperCustomizations.scss'
+import '../layout/css/swiperCustomizations.scss'
 
 import * as movieActions from './../../store/actions/movieActions'
 import CircularProgressIndicator from '../layout/CircularProgressIndicator';
