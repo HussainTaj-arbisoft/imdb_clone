@@ -1,10 +1,93 @@
+import axios from 'axios'
 import * as types from './types';
+import { MOVIE_SERVER_API_URL } from '../hosts'
+import ReactPlayer from 'react-player/lazy';
+
+const MOVIE_PEEK_LIST_LIMIT = 10
+const MOVIE_PEEK_LIST_URL = `${MOVIE_SERVER_API_URL}/?limit=${MOVIE_PEEK_LIST_LIMIT}`
+const MOVIE_DETAIL_URL = MOVIE_SERVER_API_URL;
+
+const listPeekMoviesRequest = () => {
+    return {
+        type: types.MOVIE_PEEK_LIST_REQUEST,
+        payload: {
+            peeksStatus: 'loading'
+        }
+    }
+}
 
 export const listPeekMovies = () => dispatch => {
-    dispatch({
-        type: types.MOVIE_PEEK_LIST,
-        payload: {} // TODO: 
-    })
+    dispatch(listPeekMoviesRequest());
+    axios.get(MOVIE_PEEK_LIST_URL).then(
+        (response) => {
+            dispatch({
+                type: types.MOVIE_PEEK_LIST_RESPONSE,
+                payload: {
+                    peeks: response.data.results,
+                    nextPeeksUrl: response.data.next,
+                    peeksStatus: 'loaded'
+                }
+            })
+        }
+    ).catch(({ response }) => {
+        dispatch({
+            type: types.MOVIE_PEEK_LIST_RESPONSE,
+            payload: {
+                peeks: [],
+                peeksStatus: 'error'
+            }
+        })
+    });
+}
+
+const detailMovieRequest = (movie_id) => {
+    return {
+        type: types.MOVIE_DETAIL_REQUEST,
+        payload: {
+            detail: {
+                status: 'loading',
+                movie_id: movie_id
+            }
+        }
+    }
+}
+
+export const detailMovie = (movie_id) => dispatch => {
+    dispatch(detailMovieRequest(movie_id));
+    let detailMovieUrl = `${MOVIE_DETAIL_URL}/${movie_id}`;
+    let detailMovieCrewUrl = `${MOVIE_DETAIL_URL}/crew/${movie_id}`;
+    Promise.all([
+        axios.get(detailMovieUrl),
+        axios.get(detailMovieCrewUrl)
+    ]).then(
+        ([responseMovie, responseCrew]) => {
+            console.log("REPONSE")
+            console.log(responseCrew)
+            dispatch({
+                type: types.MOVIE_DETAIL_RESPONSE,
+                payload: {
+                    detail: {
+                        movieData: responseMovie.data,
+                        crewData: responseCrew.data,
+                        status: "loaded"
+                    }
+                }
+            })
+        }
+    ).catch((response) => {
+        console.log(response);
+        response = response.response;
+        dispatch({
+            type: types.MOVIE_DETAIL_RESPONSE,
+            payload: {
+                detail: {
+                    status: "error",
+                    errorCode: response.status,
+                    errorMessage: (response.data.detail ? response.data.detail : response.statusText)
+                }
+            }
+        })
+    });
 }
 
 export const listRecommendedMovies = () => dispatch => {

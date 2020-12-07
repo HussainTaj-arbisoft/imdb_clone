@@ -1,3 +1,4 @@
+import * as types from './../actions/types'
 const dummyData = [
     {
         id: 1,
@@ -55,15 +56,27 @@ const dummyData = [
     }
 ];
 
+
 const initialState = {
-    peeks: [...dummyData],
+    peeks: [],
     recommendations: [...dummyData],
     fanFavorties: [...dummyData]
 };
 
 
 const movieReducer = (state = initialState, action) => {
-    return state;
+    switch (action.type) {
+        case types.MOVIE_PEEK_LIST_REQUEST:
+        case types.MOVIE_PEEK_LIST_RESPONSE:
+        case types.MOVIE_DETAIL_REQUEST:
+        case types.MOVIE_DETAIL_RESPONSE:
+            return Object.assign({}, {
+                ...state,
+                ...action.payload
+            });
+        default:
+            return state;
+    }
 };
 
 export default movieReducer;
