@@ -22,15 +22,17 @@ class SignUp extends Component {
     _displayFieldErrorIfExists(fieldName) {
         if (this.props.fieldErrors && this.props.fieldErrors[fieldName]) {
             let keyCounter = 0;
-            return (<ul>
-                {
-                    this.props.fieldErrors[fieldName].map((errorMessage) => (
-                        <li className="text-danger" key={keyCounter++}>
-                            {errorMessage}
-                        </li>
-                    ))
-                }
-            </ul>);
+            return (
+                <ul className="list-unstyled">
+                    {
+                        this.props.fieldErrors[fieldName].map((errorMessage) => (
+                            <li className="text-danger" key={keyCounter++}>
+                                <small>{errorMessage}</small>
+                            </li>
+                        ))
+                    }
+                </ul>
+            );
         }
     }
     _renderForm = () => {
