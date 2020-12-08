@@ -7,7 +7,14 @@ import decimal
 from django.utils.timezone import make_aware
 
 from accounts.models import User
-from movies.models import Movie, MovieImage, MovieTrailer, MovieCrew
+from movies.models import (
+    Movie,
+    MovieImage,
+    MovieTrailer,
+    MovieCrew,
+    UserMovieRating,
+    UserMovieReview,
+)
 from celebrities.models import Celebrity
 
 
@@ -29,9 +36,9 @@ def _random_date(
     return random_date
 
 
-def seed_user(users_count: int = 10):
+def seed_user(users_count: int = 20):
     User.objects.all().delete()
-    print("Old Users Deleted.")
+    print("\nOld Users Deleted.")
 
     print(f"Seeding {users_count} users...")
     for user_number in range(users_count):
@@ -52,7 +59,7 @@ def seed_user(users_count: int = 10):
 
 def seed_movie(movie_count: int = 50):
     Movie.objects.all().delete()
-    print("Old Movies Deleted.")
+    print("\nOld Movies Deleted.")
 
     trailers = [
         "movies/dummy/trailers/dummy-trailer-1.mp4",
@@ -104,16 +111,16 @@ def seed_superuser():
     user.set_password("#EDC4rfv")
     user.save()
 
-    print("Super user created.")
+    print("\nSuper user created.")
     print(f"Email: {user.email}")
     print("Password: #EDC4rfv")
 
 
 def seed_celebrities(celebrity_count: int = 50):
     Celebrity.objects.all().delete()
-    print("Old Celebrities Deleted.")
+    print("\nOld Celebrities Deleted.")
 
-    print(f"Seeding {celebrity_count} users...")
+    print(f"Seeding {celebrity_count} celebrities...")
     for celebrity_number in range(celebrity_count):
         celeb = Celebrity(
             first_name=f"Celeb {celebrity_number}",
@@ -136,13 +143,14 @@ def seed_celebrities(celebrity_count: int = 50):
 
 def seed_movie_crew():
     MovieCrew.objects.all().delete()
-    print("Old Crews Deleted.")
+    print("\nOld Crews Deleted.")
 
     movies = Movie.objects.all()
     celebrities = list(Celebrity.objects.all())
     movies_count = len(movies)
     movie_number = 0
 
+    print(f"Seeding {movies_count} movies with crew...")
     for movie in movies:
         crew_count = random.randint(5, 15)
         movie_celebrities = random.sample(celebrities, crew_count)
@@ -162,9 +170,48 @@ def seed_movie_crew():
     print()
 
 
+def seed_user_rating_and_reviews():
+    UserMovieRating.objects.all().delete()
+    UserMovieReview.objects.all().delete()
+    print("\nOld User Ratings and Reviews Deleted.")
+
+    users = User.objects.all()
+    movies = Movie.objects.all()
+    movies_count = len(movies)
+    movie_number = 0
+
+    print(f"Seeding {movies_count} movies with ratings and reviews...")
+    for movie in movies:
+        rating_count = random.randint(5, 15)
+        sample_users = random.sample(list(users), rating_count)
+        for rating_number in range(rating_count):
+            user_rating = UserMovieRating(
+                movie=movie,
+                user=sample_users[rating_number],
+                rating=random.randint(1, 11),
+            )
+            user_rating.save()
+
+        for review_number in range(rating_count):
+            user_review = UserMovieReview(
+                movie=movie,
+                user=sample_users[review_number],
+                review="This is an auto generated review.",
+            )
+            user_review.save()
+
+        movie_number += 1
+        print(
+            f"Progress: {((movie_number)/movies_count * 100):.2f}%",
+            end="\r",
+        )
+    print()
+
+
 def seed_all_default():
     seed_user()
     seed_celebrities()
     seed_movie()
     seed_movie_crew()
+    seed_user_rating_and_reviews()
     seed_superuser()
