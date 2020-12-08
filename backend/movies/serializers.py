@@ -1,7 +1,14 @@
 from django.conf import settings
 from rest_framework import serializers
 
-from .models import Movie, MovieImage, MovieTrailer, MovieCrew
+from .models import (
+    Movie,
+    MovieImage,
+    MovieTrailer,
+    MovieCrew,
+    UserMovieRating,
+    UserMovieReview,
+)
 from celebrities.serializers import CelebritySerializer
 
 
@@ -20,6 +27,9 @@ class MovieImageSerializer(serializers.ModelSerializer):
 class MovieSerializer(serializers.ModelSerializer):
     trailers = MovieTrailerSerializer(many=True)
     images = MovieImageSerializer(many=True)
+    average_user_rating = serializers.DecimalField(
+        max_digits=4, decimal_places=2
+    )
 
     class Meta:
         model = Movie
@@ -31,4 +41,16 @@ class MovieCrewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MovieCrew
+        fields = "__all__"
+
+
+class UserMovieRatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserMovieRating
+        fields = "__all__"
+
+
+class UserMovieReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserMovieReview
         fields = "__all__"
