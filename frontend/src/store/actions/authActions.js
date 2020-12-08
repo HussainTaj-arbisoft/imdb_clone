@@ -12,6 +12,20 @@ const USER_ACCOUNT_LOGOUT_URL = `${AUTH_SERVER_API_URL}/token/logout/`;
 
 const cookies = new Cookies();
 
+class AuthToken {
+    static set(token) {
+        cookies.set("token", token, { path: "/" });
+        axios.defaults.headers.common['Authorization'] = `Token ${token}`;
+    }
+    static get() {
+        return cookies.get("token", { path: "/" });
+    }
+    static remove() {
+        cookies.remove("token", { path: "/" });
+        axios.defaults.headers.common['Authorization'] = null;
+    }
+}
+
 const signInRequest = () => {
     return {
         type: types.AUTH_SIGNIN_REQUEST,
@@ -35,7 +49,7 @@ const signUpRequest = () => {
 }
 
 export const signInWithTokenCookieIfExists = () => dispatch => {
-    let token = cookies.get("token", { path: "/" });
+    let token = AuthToken.get();
     if (token) {
         signInWithToken(token)(dispatch);
     }
@@ -54,7 +68,7 @@ export const signInWithToken = (token) => dispatch => {
     ).then(
         (response) => {
             let { status, statusText, data } = response;
-            cookies.set("token", token, { path: "/" });
+            AuthToken.set(token)
             dispatch({
                 type: types.AUTH_SIGNIN_RESPONSE,
                 payload: {
@@ -72,7 +86,7 @@ export const signInWithToken = (token) => dispatch => {
         }
     ).catch(({ response }) => {
         let { status, statusText, data } = response;
-        cookies.remove("token", { path: "/" });
+        AuthToken.remove()
         dispatch({
             type: types.AUTH_SIGNIN_RESPONSE,
             payload: {
@@ -169,7 +183,7 @@ export const signOut = (authToken) => dispatch => {
             }
         }
     ).then((response) => {
-        cookies.remove("token", { path: "/" });
+        AuthToken.remove();
         dispatch({
             type: types.AUTH_SIGNOUT,
             payload: {
