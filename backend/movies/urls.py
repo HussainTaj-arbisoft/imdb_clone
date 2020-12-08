@@ -3,6 +3,8 @@ from rest_framework.routers import DefaultRouter
 from movies import views
 
 router = DefaultRouter()
+router.register("ratings", views.UserMovieRatingViewSet)
+router.register("reviews", views.UserMovieReviewViewSet)
 router.register("", views.MovieViewSet)
 
 urlpatterns = [
