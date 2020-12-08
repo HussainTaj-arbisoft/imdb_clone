@@ -1,8 +1,13 @@
 import os
 import uuid
 
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.conf import settings
+from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
 
 
 def _get_movie_cover_image_url(instance, filename):
@@ -99,3 +104,51 @@ class MovieCrew(models.Model):
 
     def __str__(self):
         return f"{self.celebrity} {self.movie} {self.role}"
+
+
+class UserMovieRating(models.Model):
+    user = models.ForeignKey(
+        User,
+        verbose_name="User",
+        on_delete=models.CASCADE,
+        related_name="movie_ratings",
+    )
+    movie = models.ForeignKey(
+        Movie,
+        verbose_name="Movie",
+        on_delete=models.CASCADE,
+        related_name="user_ratings",
+    )
+    rating = models.SmallIntegerField(
+        validators=[MaxValueValidator(10), MinValueValidator(1)],
+        choices=[
+            (1, 1),
+            (2, 2),
+            (3, 3),
+            (4, 4),
+            (5, 5),
+            (6, 6),
+            (7, 7),
+            (8, 8),
+            (9, 9),
+            (10, 10),
+        ],
+        default=10,
+    )
+
+
+class UserMovieReview(models.Model):
+    user = models.ForeignKey(
+        User,
+        verbose_name="User",
+        on_delete=models.CASCADE,
+        related_name="movie_reviews",
+    )
+    movie = models.ForeignKey(
+        Movie,
+        verbose_name="Movie",
+        on_delete=models.CASCADE,
+        related_name="user_reviews",
+    )
+
+    review = models.TextField("Review", max_length=1024)
