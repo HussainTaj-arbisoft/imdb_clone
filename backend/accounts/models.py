@@ -2,6 +2,10 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 
+def _get_profile_image_url(instance, filename):
+    return f"accounts/{instance.user.id}/images/{uuid.uuid4()}{filename}"
+
+
 class UserManager(BaseUserManager):
     def create_user(self, email, first_name, last_name, password=None):
         if not email:
@@ -54,3 +58,16 @@ class User(AbstractUser):
     @property
     def is_staff(self):
         return self.is_admin
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(
+        User,
+        verbose_name="User",
+        on_delete=models.CASCADE,
+        related_name="profile",
+    )
+    image = models.ImageField(
+        "Profile Image",
+        upload_to=_get_profile_image_url,
+    )
