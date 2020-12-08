@@ -11,6 +11,7 @@ import Header from '../layout/Header';
 
 import parseTuple from '../../utilities/tuple'
 import StatusBasedComponent from '../layout/StatusBasedComponent';
+import UserMovieRating from './UserMovieRating';
 
 SwiperCore.use([Lazy, Navigation, A11y]);
 
@@ -29,6 +30,9 @@ class MovieDetail extends Component {
         let movie = this.props.movieData;
         let crew = this.props.crewData;
         let images = movie.images.map((imageObj) => imageObj.image);
+        let release_date = new Date(movie.release_date);
+        let release_date_str = (release_date.getFullYear() + "-" +
+            release_date.getMonth() + "-" + release_date.getDate());
         return (
             <div className="container py-4 text-light">
                 <div className="row bg-dark">
@@ -71,6 +75,14 @@ class MovieDetail extends Component {
                         </div>
                     </div>
                 </div>
+                <div className="m-2 d-flex justify-content-between">
+                    <p>
+                        {parseTuple(movie.rating)[1]}
+                    </p>
+                    <p>
+                        Release Date: {release_date_str}
+                    </p>
+                </div>
                 <div className="row m-2">
                     <button
                         className="btn btn-primary w-100"
@@ -83,9 +95,10 @@ class MovieDetail extends Component {
                         sources={images}
                     />
                 </div>
-                <div className="row m-4">
-                    <h1 className="text-primary">Crew</h1>
-                    <table className="table table-dark bg-dark table-borderless table-striped table-sm">
+                <h1 className="text-primary py-2">Crew</h1>
+                <div className="row my-4" style={{ maxHeight: '100vh', overflow: 'auto' }}>
+                    <table
+                        className="table table-dark bg-dark table-borderless table-striped table-sm">
                         <thead>
                             <tr>
                                 <th scope="col"></th>
@@ -110,6 +123,7 @@ class MovieDetail extends Component {
                         </tbody>
                     </table>
                 </div>
+                <UserMovieRating movie_id={movie.id} />
             </div>
         )
     }
@@ -144,7 +158,7 @@ class MovieDetail extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        ...state.movies.detail
+        ...state.movies.detail,
     }
 };
 
