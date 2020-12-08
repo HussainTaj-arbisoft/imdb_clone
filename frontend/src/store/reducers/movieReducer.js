@@ -60,7 +60,10 @@ const dummyData = [
 const initialState = {
     peeks: [],
     recommendations: [...dummyData],
-    fanFavorties: [...dummyData]
+    fanFavorties: [...dummyData],
+    detail: {},
+    detailCurrentUserRating: {},
+    detailCurrentUserReview: {}
 };
 
 
@@ -77,6 +80,24 @@ const movieReducer = (state = initialState, action) => {
         case types.MOVIE_DETAIL_RESPONSE:
             return Object.assign({}, state, {
                 detail: {
+                    ...action.payload
+                }
+            });
+        case types.MOVIE_USER_RATING_RETRIEVE_REQUEST:
+        case types.MOVIE_USER_RATING_RETRIEVE_RESPONSE:
+        case types.MOVIE_USER_RATING_RATE_REQUEST:
+        case types.MOVIE_USER_RATING_RATE_RESPONSE:
+            return Object.assign({}, state, {
+                detailCurrentUserRating: {
+                    ...action.payload
+                }
+            });
+        case types.MOVIE_USER_REVIEW_RETRIEVE_REQUEST:
+        case types.MOVIE_USER_REVIEW_RETRIEVE_RESPONSE:
+        case types.MOVIE_USER_REVIEW_REQUEST:
+        case types.MOVIE_USER_REVIEW_RESPONSE:
+            return Object.assign({}, state, {
+                detailCurrentUserReview: {
                     ...action.payload
                 }
             });

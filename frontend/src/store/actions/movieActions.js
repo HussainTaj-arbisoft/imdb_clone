@@ -3,9 +3,11 @@ import * as types from './types';
 import { MOVIE_SERVER_API_URL } from '../hosts'
 import ReactPlayer from 'react-player/lazy';
 
-const MOVIE_PEEK_LIST_LIMIT = 10
-const MOVIE_PEEK_LIST_URL = `${MOVIE_SERVER_API_URL}/?limit=${MOVIE_PEEK_LIST_LIMIT}`
+const MOVIE_PEEK_LIST_LIMIT = 10;
+const MOVIE_PEEK_LIST_URL = `${MOVIE_SERVER_API_URL}/?limit=${MOVIE_PEEK_LIST_LIMIT}`;
 const MOVIE_DETAIL_URL = MOVIE_SERVER_API_URL;
+const MOVIE_RATING_URL = `${MOVIE_SERVER_API_URL}/ratings/`;
+const MOVIE_REVIEW_URL = `${MOVIE_SERVER_API_URL}/reviews/`;
 
 const listPeekMoviesRequest = () => {
     return {
@@ -37,7 +39,7 @@ export const listPeekMovies = () => dispatch => {
                 status: 'error',
                 statusCode: response.status,
                 statusText: response.statusText,
-                errorMessage: response.data.detail
+                errorMessage: response.data?.detail
             }
         })
     });
@@ -62,8 +64,6 @@ export const detailMovie = (movie_id) => dispatch => {
         axios.get(detailMovieCrewUrl)
     ]).then(
         ([responseMovie, responseCrew]) => {
-            console.log("REPONSE")
-            console.log(responseCrew)
             dispatch({
                 type: types.MOVIE_DETAIL_RESPONSE,
                 payload: {
@@ -74,7 +74,6 @@ export const detailMovie = (movie_id) => dispatch => {
             })
         }
     ).catch((response) => {
-        console.log(response);
         response = response.response;
         dispatch({
             type: types.MOVIE_DETAIL_RESPONSE,
@@ -82,11 +81,153 @@ export const detailMovie = (movie_id) => dispatch => {
                 status: "error",
                 statusCode: response.status,
                 statusText: response.statusText,
-                errorMessage: response.data.detail
+                errorMessage: response.data?.detail
             }
         })
     });
 }
+
+const rateMovieRequest = () => {
+    return {
+        type: types.MOVIE_USER_RATING_RATE_REQUEST,
+        payload: {
+            status: "loading"
+        }
+    }
+};
+
+export const rateMovie = (movie_id, user_id, rating) => dispatch => {
+    dispatch(rateMovieRequest());
+    axios.post(MOVIE_RATING_URL, {
+        movie: movie_id,
+        user: user_id,
+        rating: rating,
+    }).then((response) => {
+        dispatch({
+            type: types.MOVIE_USER_RATING_RATE_RESPONSE,
+            payload: {
+                status: "loaded",
+                ...response.data
+            }
+        });
+    }).catch(({ response }) => {
+        dispatch({
+            type: types.MOVIE_USER_RATING_RATE_RESPONSE,
+            payload: {
+                status: "error",
+                statusCode: response.status,
+                statusText: response.statusText,
+                errorMessage: response.data?.detail
+            }
+        });
+    });
+}
+
+const getUserMovieRatingRequest = () => {
+    return {
+        type: types.MOVIE_USER_RATING_RETRIEVE_REQUEST,
+        payload: {
+            status: "loading"
+        }
+    }
+}
+
+export const getUserMovieRating = (movie_id) => dispatch => {
+    dispatch(getUserMovieRatingRequest());
+    let url = `${MOVIE_RATING_URL}user_movie_rating/${movie_id}/`;
+    axios.get(url).then((response) => {
+        dispatch({
+            type: types.MOVIE_USER_RATING_RETRIEVE_RESPONSE,
+            payload: {
+                status: "loaded",
+                ...response.data
+            }
+        });
+    }).catch((response) => {
+        dispatch({
+            type: types.MOVIE_USER_RATING_RETRIEVE_RESPONSE,
+            payload: {
+                status: "error",
+                statusCode: response.status,
+                statusText: response.statusText,
+                errorMessage: response.data?.detail
+            }
+        });
+    })
+}
+
+
+
+const getUserMovieReviewRequest = () => {
+    return {
+        type: types.MOVIE_USER_REVIEW_RETRIEVE_REQUEST,
+        payload: {
+            status: "loading"
+        }
+    }
+}
+
+export const getUserMovieReview = (movie_id) => dispatch => {
+    dispatch(getUserMovieReviewRequest());
+    let url = `${MOVIE_REVIEW_URL}user_movie_review/${movie_id}/`;
+    axios.get(url).then((response) => {
+        dispatch({
+            type: types.MOVIE_USER_REVIEW_RETRIEVE_RESPONSE,
+            payload: {
+                status: "loaded",
+                ...response.data
+            }
+        });
+    }).catch((response) => {
+        dispatch({
+            type: types.MOVIE_USER_REVIEW_RETRIEVE_RESPONSE,
+            payload: {
+                status: "error",
+                statusCode: response.status,
+                statusText: response.statusText,
+                errorMessage: response.data?.detail
+            }
+        });
+    })
+}
+
+
+const reviewMovieRequest = () => {
+    return {
+        type: types.MOVIE_USER_REVIEW_REQUEST,
+        payload: {
+            status: "loading"
+        }
+    };
+};
+
+export const reviewMovie = (movie_id, user_id, review) => dispatch => {
+    dispatch(reviewMovieRequest());
+    axios.post(MOVIE_REVIEW_URL, {
+        movie: movie_id,
+        user: user_id,
+        review: review,
+    }).then((response) => {
+        dispatch({
+            type: types.MOVIE_USER_REVIEW_RESPONSE,
+            payload: {
+                status: "loaded",
+                ...response.data
+            }
+        });
+    }).catch(({ response }) => {
+        dispatch({
+            type: types.MOVIE_USER_REVIEW_RESPONSE,
+            payload: {
+                status: "error",
+                statusCode: response.status,
+                statusText: response.statusText,
+                errorMessage: response.data?.detail
+            }
+        });
+    });
+}
+
 
 export const listRecommendedMovies = () => dispatch => {
     dispatch({
