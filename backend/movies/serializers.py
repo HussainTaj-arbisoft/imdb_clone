@@ -28,7 +28,7 @@ class MovieSerializer(serializers.ModelSerializer):
     trailers = MovieTrailerSerializer(many=True)
     images = MovieImageSerializer(many=True)
     average_user_rating = serializers.DecimalField(
-        max_digits=4, decimal_places=2
+        max_digits=3, decimal_places=1
     )
 
     class Meta:
