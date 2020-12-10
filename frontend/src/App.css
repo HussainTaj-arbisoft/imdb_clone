@@ -2,6 +2,23 @@ video:focus {
     outline: none;
 }
 
-p {
-    color: white;
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+   }
+::-webkit-scrollbar-thumb {
+    background: #755e0c2f;
+    border-radius: 15px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #755E0C;
+}
+::-webkit-scrollbar-track {
+    background: #121212;
+    border-radius: 15px;
+}
+
+* {
+    scrollbar-color: #755E0C #121212;
+    scrollbar-width: thin;
 }
