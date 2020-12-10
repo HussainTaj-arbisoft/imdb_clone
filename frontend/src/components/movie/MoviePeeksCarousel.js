@@ -42,7 +42,7 @@ class MoviePeeksCarousel extends Component {
         return (
             <Swiper
                 direction="vertical"
-                spaceBetween={20}
+                spaceBetween={5}
                 slidesPerView={'auto'} id="peekVideoCarouselNextSidebar"
                 onSwiper={this.setControlledSwiper}
                 loopedSlides={upNextSwiperMovies.length}
@@ -56,16 +56,16 @@ class MoviePeeksCarousel extends Component {
                         if (movie.trailers && movie.trailers.length > 0)
                             duration = movie.trailers[0].duration;
                         return (
-                            <SwiperSlide className="d-flex p-2" key={movie.id}>
-                                <Link to={`/movie/${movie.id}`}>
+                            <SwiperSlide key={movie.id}>
+                                <Link to={`/movie/${movie.id}`} className="d-flex p-2 align-items-center text-decoration-none">
                                     <img src={movie.poster_image} alt="Poster" height='100' />
+                                    <div className="p-2">
+                                        <span className="fa fa-play-circle"></span>
+                                        <small className="text-light pl-2">{duration}</small>
+                                        <h5>{movie.title}</h5>
+                                        <p className="mb-0">{movie.tagline}</p>
+                                    </div>
                                 </Link>
-                                <div className="p-2">
-                                    <span className="fa fa-play-circle"></span>
-                                    <small className="text-light pl-2">{duration}</small>
-                                    <h5>{movie.title}</h5>
-                                    <p>{movie.tagline}</p>
-                                </div>
                             </SwiperSlide>
                         )
                     })
@@ -110,9 +110,7 @@ class MoviePeeksCarousel extends Component {
                             duration = movie.trailers[0].duration;
                         return (
                             <SwiperSlide className="swiper-slide-item" key={movie.id}>
-                                <Link
-                                    to={`/movie/${movie.id}`}
-                                    className="text-light">
+                                <Link to={`/movie/${movie.id}`}>
                                     <img className="d-block w-100" src={movie.cover_image} alt={movie.title} />
                                     <div className="d-flex align-items-end swiper-slide-caption">
                                         <img src={movie.poster_image} alt="Poster" height='150' />
@@ -165,6 +163,7 @@ class MoviePeeksCarousel extends Component {
                 statusCode={this.props.statusCode}
                 statusText={this.props.statusText}
                 errorMessage={this.props.errorMessage}
+                className="text-white"
             >
                 {content}
             </StatusBasedComponent>
