@@ -5,10 +5,16 @@ import CircularProgressIndicator from './CircularProgressIndicator';
 export default function StatusBasedComponent(props) {
     switch (props.status) {
         case "loading":
-            return <CircularProgressIndicator bottomText={props.loadingText} />
+            return (
+                <CircularProgressIndicator
+                    bottomText={props.loadingText}
+                    sizeClass={props.spinnerSizeClass}
+                    className={props.className}
+                />
+            );
         case "error":
             return (
-                <div className="text-center">
+                <div className={`${props.className} text-center`}>
                     <h1>{props.statusCode} {props.statusText}</h1>
                     <p>{props.errorMessage}</p>
                 </div>
@@ -16,6 +22,10 @@ export default function StatusBasedComponent(props) {
         case "loaded":
             return props.children;
         default:
-            return (<p>Status Undefined</p>)
+            return (
+                <div className={`${props.className} text-center`}>
+                    <span>{props.undefinedStatusText ?? "Status Undefined"}</span>
+                </div>
+            );
     }
 }
