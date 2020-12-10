@@ -5,6 +5,7 @@ import time
 import decimal
 
 from django.utils.timezone import make_aware
+import faker
 
 from accounts.models import User
 from movies.models import (
@@ -18,11 +19,10 @@ from movies.models import (
 from celebrities.models import Celebrity
 
 
-SYNOPSIS = """Ait et vale. Charaxi fuit moenia Maeonios, quisquis! Et nulla: 
-torsit et contulit hastam consequitur aptius petiit Maenaliosque languentique 
-admonitu dixit est primusque dixit est di cunctantem. Deas constantia vi tecum 
-vesci venturi, pharetras et medio, labitur iam manant nubila, ne tum.
-"""
+fake = faker.Faker()
+fake.add_provider(faker.providers.person)
+fake.add_provider(faker.providers.lorem)
+fake.add_provider(faker.providers.date_time)
 
 
 def _random_date(
@@ -43,8 +43,8 @@ def seed_user(users_count: int = 20):
     print(f"Seeding {users_count} users...")
     for user_number in range(users_count):
         user = User(
-            first_name=f"User {user_number}",
-            last_name=f"Last Name",
+            first_name=fake.first_name(),
+            last_name=fake.last_name(),
             email=f"user{user_number}@test.com",
         )
         user.set_password("#EDC4rfv")
@@ -57,7 +57,7 @@ def seed_user(users_count: int = 20):
     print()
 
 
-def seed_movie(movie_count: int = 50):
+def seed_movie(movie_count: int = 500):
     Movie.objects.all().delete()
     print("\nOld Movies Deleted.")
 
@@ -73,10 +73,10 @@ def seed_movie(movie_count: int = 50):
     print(f"Seeding {movie_count} movies...")
     for movie_number in range(movie_count):
         movie = Movie(
-            title=f"Movie {movie_number} title",
-            tagline=f"Movie that is nice. {movie_number}",
+            title=fake.text(max_nb_chars=30),
+            tagline=fake.text(max_nb_chars=60),
             rating=random.choice(Movie.RATING_CHOICES),
-            synopsis=SYNOPSIS,
+            synopsis=fake.paragraph(nb_sentences=6),
             release_date=_random_date(),
             cover_image="movies/dummy/cover_image.jpg",
             poster_image="movies/dummy/poster_image.jpg",
@@ -86,7 +86,7 @@ def seed_movie(movie_count: int = 50):
         for trailer_url, image_url in zip(trailers, images):
             trailer = MovieTrailer(
                 movie=movie,
-                title=f"Trailer {movie_number} {counter}",
+                title=f"Trailer {fake.text(max_nb_chars=20)}",
                 video=trailer_url,
                 duration=datetime.timedelta(minutes=random.randint(1, 60)),
             )
@@ -94,7 +94,7 @@ def seed_movie(movie_count: int = 50):
 
             image = MovieImage(
                 movie=movie,
-                caption=f"Image {movie_number} {counter}",
+                caption=f"Image {fake.text(max_nb_chars=20)}",
                 image=image_url,
             )
             image.save()
@@ -123,12 +123,12 @@ def seed_celebrities(celebrity_count: int = 50):
     print(f"Seeding {celebrity_count} celebrities...")
     for celebrity_number in range(celebrity_count):
         celeb = Celebrity(
-            first_name=f"Celeb {celebrity_number}",
-            last_name=f"Last Name",
-            date_of_birth=_random_date().date(),
-            description=SYNOPSIS,
+            first_name=fake.first_name(),
+            last_name=fake.last_name(),
+            date_of_birth=fake.date_this_century(),
+            description=fake.paragraph(nb_sentences=10),
             popularity_score=decimal.Decimal(random.random()),
-            debut_date=_random_date().date(),
+            debut_date=fake.date_this_century(),
             image="celebrities/dummy/celebrity_image.jpg",
         )
 
@@ -196,7 +196,7 @@ def seed_user_rating_and_reviews():
             user_review = UserMovieReview(
                 movie=movie,
                 user=sample_users[review_number],
-                review="This is an auto generated review.",
+                review=fake.text(max_nb_chars=500),
             )
             user_review.save()
 
