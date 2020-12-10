@@ -19,6 +19,10 @@ class MovieDetail extends Component {
     componentDidMount() {
         this.props.detailMovie(this.props.match.params.id)
     }
+    componentDidUpdate(prevProps) {
+        if (this.props.match.params.id !== prevProps.match.params.id)
+            this.props.detailMovie(this.props.match.params.id)
+    }
     state = {
         lightBoxToggler: false
     }
@@ -57,7 +61,7 @@ class MovieDetail extends Component {
                     </div>
                     <div className="col-lg-4 col-md-12 bg-dark">
                         <div className="d-flex m-2">
-                            <img src='https://upload.wikimedia.org/wikipedia/en/0/0e/The_Boss_Baby_poster.jpg'
+                            <img src={movie.poster_image}
                                 alt="poster"
                                 width="100"
                             />
@@ -96,7 +100,7 @@ class MovieDetail extends Component {
                     />
                 </div>
                 <h1 className="text-primary py-2">Crew</h1>
-                <div className="row my-4" style={{ maxHeight: '100vh', overflow: 'auto' }}>
+                <div className="row my-4" style={{ maxHeight: '50vh', overflow: 'auto' }}>
                     <table
                         className="table table-dark bg-dark table-borderless table-striped table-sm">
                         <thead>
@@ -146,6 +150,7 @@ class MovieDetail extends Component {
                     statusCode={this.props.statusCode}
                     statusText={this.props.statusText}
                     errorMessage={this.props.errorMessage}
+                    className="text-white"
                 >
                     {content}
                 </StatusBasedComponent>
