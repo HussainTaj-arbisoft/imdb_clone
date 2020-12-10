@@ -63,7 +63,8 @@ const initialState = {
     fanFavorties: [...dummyData],
     detail: {},
     detailCurrentUserRating: {},
-    detailCurrentUserReview: {}
+    detailCurrentUserReview: {},
+    search: {}
 };
 
 
@@ -98,6 +99,13 @@ const movieReducer = (state = initialState, action) => {
         case types.MOVIE_USER_REVIEW_RESPONSE:
             return Object.assign({}, state, {
                 detailCurrentUserReview: {
+                    ...action.payload
+                }
+            });
+        case types.MOVIE_SEARCH_REQUEST:
+        case types.MOVIE_SEARCH_RESPONSE:
+            return Object.assign({}, state, {
+                search: {
                     ...action.payload
                 }
             });
