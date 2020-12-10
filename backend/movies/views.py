@@ -7,6 +7,12 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from django.db.models import Value
+from django.contrib.postgres.search import (
+    SearchVector,
+    SearchRank,
+    SearchQuery,
+)
 
 from django.db.models.aggregates import Avg
 
@@ -26,6 +32,38 @@ class MovieViewSet(viewsets.ModelViewSet):
     ).all()
     serializer_class = MovieSerializer
     pagination_class = LimitOffsetPagination
+
+    @action(
+        methods=["get"],
+        url_path="search/(?P<search_string>.+)",
+        detail=False,
+    )
+    def search(self, request, search_string):
+        search_vector = (
+            SearchVector("title", weight="A")
+            + SearchVector("tagline", weight="B")
+            + SearchVector("synopsis", weight="C")
+        )
+        search_query = SearchQuery(search_string)
+        queryset = (
+            self.get_queryset()
+            .annotate(
+                rank=SearchRank(
+                    search_vector,
+                    search_query,
+                ),
+            )
+            .filter(rank__gt=0.009)
+            .order_by("-rank")
+        )
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class MovieCrewListAPIView(ListAPIView):
@@ -86,7 +124,6 @@ class UserMovieReviewViewSet(viewsets.ModelViewSet):
     pagination_class = LimitOffsetPagination
 
     def perform_create(self, serializer):
-        print("\n\n\n CAME TO CREATE \n\n\n")
         if serializer.validated_data.get("user") != self.request.user:
             raise AuthenticationFailed(
                 "User that is trying to review is not the user signed in.",
