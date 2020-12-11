@@ -1,40 +1,23 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-
 import logo from '../../logo.svg';
-
-import * as authActions from '../../store/actions/authActions';
+import AuthenticateUser from '../auth/AuthenticateUser';
+import AccountNavButton from './AccountNavButton';
 import SearchBar from './SearchBar';
 
 
 class Header extends Component {
-    signOut = () => {
-        this.props.signOut(this.props.auth.authToken);
-    }
     render() {
-        let accountButton;
-        if (this.props.auth.isAuthenticated) {
-            accountButton = (
-                <div className="btn-group">
-                    <button className="btn btn-dark btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span className="fa fa-user-circle fa-lg mr-1"> </span> {this.props.auth.user.first_name}
-                    </button>
-                    <div className="dropdown-menu bg-dark">
-                        <button className="dropdown-item btn btn-primary bg-dark text-light" onClick={this.signOut}>
-                            <span className="fa fa-sign-out"></span> Sign Out
-                        </button>
-                    </div>
-                </div>
-            );
-        }
-        else {
-            accountButton = (
-                <Link to="/auth/signin" className="btn btn-dark text-nowrap">
-                    Sign In
-                </Link>
-            );
-        }
+        let accountNavButton = (
+            <AuthenticateUser
+                required={false}
+                circularProgressIndicatorProps={{
+                    height: "20px",
+                    width: "20px"
+                }}
+            >
+                <AccountNavButton />
+            </AuthenticateUser>
+        );
         return (
             <nav className="navbar navbar-dark navbar-expand-md bg-dark">
                 <div className="container">
@@ -64,7 +47,7 @@ class Header extends Component {
                                 <SearchBar className="w-100 h-100" />
                             </div>
                             <div className="nav-item mx-2 d-flex align-items-center">
-                                {accountButton}
+                                {accountNavButton}
                             </div>
                         </div>
                     </div>
@@ -74,15 +57,4 @@ class Header extends Component {
     }
 }
 
-
-const mapStateToProps = (state) => {
-    return {
-        auth: state.auth
-    }
-};
-
-const headerActions = ({
-    signOut: authActions.signOut
-});
-
-export default connect(mapStateToProps, headerActions)(Header);
+export default Header;
