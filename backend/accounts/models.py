@@ -38,6 +38,10 @@ class User(AbstractUser):
         verbose_name="Email", max_length=255, unique=True
     )
     is_admin = models.BooleanField(default=False)
+    last_seen = models.DateTimeField(
+        "Last Seen", auto_now=False, auto_now_add=True
+    )
+
     REQUIRED_FIELDS = ["first_name", "last_name"]
     USERNAME_FIELD = "email"
     objects = UserManager()
