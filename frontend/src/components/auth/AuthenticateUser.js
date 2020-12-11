@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { Redirect } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import * as authActions from '../../store/actions/authActions';
@@ -38,7 +38,20 @@ class AuthenticateUser extends Component {
         if (this.props.required === false)
             return this.props.children
 
-        return progressIndicator;
+        return (
+            <p className="text-center text-light">
+                <span>Sorry, this feature is only for signed in users. To sign in </span>
+
+                <Link to={{
+                    pathname: "/auth/signin",
+                    state: {
+                        nextUrl: this.props.location.pathname
+                    }
+                }} >
+                    <u>click here.</u>
+                </Link>
+            </p>
+        );
     }
 }
 const mapStateToProps = (state) => {
