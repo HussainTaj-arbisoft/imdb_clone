@@ -33,8 +33,8 @@ class SearchBar extends Component {
     render() {
         let movies = this.props.movies ?? [];
         let searchResultContent = (movies.map((movie) => (
-            <Link to={`/movie/${movie.id}`} className="text-decoration-none">
-                <div className="d-flex m-2 align-items-center shadow rounded" key={movie.id}>
+            <Link to={`/movie/${movie.id}`} className="text-decoration-none" key={movie.id}>
+                <div className="d-flex m-2 align-items-center shadow rounded">
                     <img
                         src="https://upload.wikimedia.org/wikipedia/en/0/0e/The_Boss_Baby_poster.jpg"
                         width="70" alt="poster"
