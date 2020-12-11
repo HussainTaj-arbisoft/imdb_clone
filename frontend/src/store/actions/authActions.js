@@ -48,10 +48,23 @@ const signUpRequest = () => {
     }
 }
 
-export const signInWithTokenCookieIfExists = () => dispatch => {
+export const signInWithTokenCookie = () => dispatch => {
     let token = AuthToken.get();
     if (token) {
+        dispatch(signInRequest());
         signInWithToken(token)(dispatch);
+    }
+    else {
+        dispatch({
+            type: types.AUTH_SIGNIN_RESPONSE,
+            payload: {
+                signIn: {
+                    isSigningIn: false,
+                },
+                isAuthenticated: false,
+                signInWithTokenFailed: true,
+            }
+        })
     }
 }
 
@@ -80,7 +93,9 @@ export const signInWithToken = (token) => dispatch => {
                     },
                     authToken: token,
                     user: data,
-                    isAuthenticated: true
+                    isAuthenticated: true,
+                    signInWithTokenFailed: false,
+                    signedOut: false
                 }
             })
         }
@@ -96,7 +111,8 @@ export const signInWithToken = (token) => dispatch => {
                     statusText,
                     data
                 },
-                isAuthenticated: false
+                isAuthenticated: false,
+                signInWithTokenFailed: true,
             }
         })
     });
@@ -173,30 +189,24 @@ export const signUp = (firstName,
     }
 
 export const signOut = (authToken) => dispatch => {
-    axios.post(
-        USER_ACCOUNT_LOGOUT_URL, {},
-        {
-            headers: {
-                // 'Content-Type': 'application/json',
-                // 'Accept': 'application/json',
-                "Authorization": `Token ${authToken}`
+    axios.post(USER_ACCOUNT_LOGOUT_URL).then(
+        (response) => {
+            AuthToken.remove();
+            dispatch({
+                type: types.AUTH_SIGNOUT,
+                payload: {
+                    signUp: {},
+                    signIn: {},
+                    user: {},
+                    isAuthenticated: false,
+                    signInWithTokenFailed: null,
+                    authToken: null,
+                    signedOut: true,
+                }
+            })
+        }).catch(
+            ({ response }) => {
+                alert("Unable to Logout. Make sure you're connected to the internet.");
             }
-        }
-    ).then((response) => {
-        AuthToken.remove();
-        dispatch({
-            type: types.AUTH_SIGNOUT,
-            payload: {
-                signUp: {},
-                signIn: {},
-                user: {},
-                isAuthenticated: false,
-                authToken: null,
-            }
-        })
-    }).catch(
-        ({ response }) => {
-            alert("Unable to Logout. Make sure you're connected to the internet.");
-        }
-    )
+        )
 } 
