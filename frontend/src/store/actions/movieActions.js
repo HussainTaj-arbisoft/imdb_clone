@@ -1,6 +1,7 @@
 import axios from 'axios'
 import * as types from './types';
 import { MOVIE_SERVER_API_URL } from '../hosts'
+import { createErrorResponseAction } from './utilities'
 
 const MOVIE_PEEK_LIST_LIMIT = 10;
 const MOVIE_PEEK_LIST_URL = `${MOVIE_SERVER_API_URL}/?limit=${MOVIE_PEEK_LIST_LIMIT}`;
@@ -10,18 +11,6 @@ const MOVIE_REVIEW_URL = `${MOVIE_SERVER_API_URL}/reviews/`;
 const MOVIE_SEARCH_URL = `${MOVIE_SERVER_API_URL}/search/`;
 const MOVIE_SEARCH_RESULT_LIMIT = 10;
 
-
-const createErrorResponseAction = (type, response) => {
-    return {
-        type,
-        payload: {
-            status: 'error',
-            statusCode: response?.status,
-            statusText: response?.statusText,
-            errorMessage: response?.data?.detail
-        }
-    };
-}
 
 const listPeekMoviesRequest = () => {
     return {
