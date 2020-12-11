@@ -7,7 +7,7 @@ import decimal
 from django.utils.timezone import make_aware
 import faker
 
-from accounts.models import User
+from accounts.models import User, Profile
 from movies.models import (
     Movie,
     MovieImage,
@@ -23,6 +23,12 @@ fake = faker.Faker()
 fake.add_provider(faker.providers.person)
 fake.add_provider(faker.providers.lorem)
 fake.add_provider(faker.providers.date_time)
+
+PROFILE_IMAGES = [
+    "accounts/dummy/profile_picture_1.jpg",
+    "accounts/dummy/profile_picture_2.jpg",
+    "accounts/dummy/profile_picture_3.jpg",
+]
 
 
 def _random_date(
@@ -46,10 +52,14 @@ def seed_user(users_count: int = 20):
             first_name=fake.first_name(),
             last_name=fake.last_name(),
             email=f"user{user_number}@test.com",
+            last_seen=fake.date_time_this_month(),
         )
         user.set_password("#EDC4rfv")
 
         user.save()
+
+        profile = Profile(user=user, image=random.choice(PROFILE_IMAGES))
+        profile.save()
 
         print(
             f"Progress: {((user_number+1)/users_count * 100):.2f}%", end="\r"
@@ -110,6 +120,9 @@ def seed_superuser():
     user = User.objects.create_superuser("admin@test.com", "admin", "admin")
     user.set_password("#EDC4rfv")
     user.save()
+
+    profile = Profile(user=user, image=random.choice(PROFILE_IMAGES))
+    profile.save()
 
     print("\nSuper user created.")
     print(f"Email: {user.email}")
