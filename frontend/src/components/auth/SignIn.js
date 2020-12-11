@@ -10,6 +10,21 @@ import CircularProgressIndicator from '../layout/CircularProgressIndicator';
 
 
 class SignIn extends Component {
+    state = {
+        nextUrl: "/"
+    }
+
+    componentDidMount() {
+        this.setState({ nextUrl: this.props.location.state?.nextUrl ?? "/" })
+    }
+
+    componentDidUpdate(prevProps) {
+        let nextUrlProp = this.props.location.state?.nextUrl
+        if (nextUrlProp && nextUrlProp !== this.state.nextUrl) {
+            this.setState({ nextUrl: nextUrlProp })
+        }
+    }
+
     onSubmit = (values, { setSubmitting }) => {
         this.props.signIn(values['email'], values['password']);
     }
@@ -74,8 +89,9 @@ class SignIn extends Component {
     }
 
     render() {
-        if (this.props.isAuthenticated)
-            return <Redirect to="/" />
+        if (this.props.isAuthenticated) {
+            return <Redirect to={this.state.nextUrl} />
+        }
 
         const initialFormValues = {
             email: '',
