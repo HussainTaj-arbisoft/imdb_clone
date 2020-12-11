@@ -64,6 +64,7 @@ class CelebritiesBornTodayList extends Component {
                     statusText={this.props.statusText}
                     errorMessage={this.props.errorMessage}
                     loadingText={"Loading..."}
+                    className="text-light"
                 >
                     {content}
                 </StatusBasedComponent>
