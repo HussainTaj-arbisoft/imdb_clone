@@ -51,6 +51,8 @@ class User(AbstractUser):
 
     def save(self, *args, **kwargs):
         self.username = self.email
+        if self.profile is None:
+            Profile.objects.create(user=self)
         super(User, self).save(*args, **kwargs)
 
     def has_perm(self, perm, obj=None):
@@ -74,4 +76,5 @@ class Profile(models.Model):
     image = models.ImageField(
         "Profile Image",
         upload_to=_get_profile_image_url,
+        default="/static/accounts/images/placeholders/profile_image.jpg",
     )
