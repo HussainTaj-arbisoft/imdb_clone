@@ -8,6 +8,7 @@ import AuthRouter from './components/auth/AuthRouter';
 import * as authActions from './store/actions/authActions'
 
 import MovieRouter from './components/movie/MovieRouter';
+import ChatRouter from './components/chat/ChatRouter';
 
 class App extends Component {
   componentDidMount() {
@@ -22,6 +23,7 @@ class App extends Component {
         <BrowserRouter>
           <Switch>
             <Route path="/auth" component={AuthRouter} />
+            <Route path="/chat" component={ChatRouter} />
             <Route path="/" component={MovieRouter} />
           </Switch>
         </BrowserRouter>
