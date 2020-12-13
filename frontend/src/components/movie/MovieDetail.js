@@ -39,7 +39,7 @@ class MovieDetail extends Component {
             release_date.getMonth() + "-" + release_date.getDate());
         return (
             <div className="container py-4 text-light">
-                <div className="row bg-dark">
+                <div className="row bg-dark rounded">
                     <div className="col-lg-8 col-md-12 p-0">
                         <Swiper
                             slidesPerView={1}
@@ -79,19 +79,35 @@ class MovieDetail extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="m-2 d-flex justify-content-between">
-                    <p>
-                        {parseTuple(movie.rating)[1]}
-                    </p>
-                    <p>
-                        Release Date: {release_date_str}
-                    </p>
+                <div className="card bg-dark p-2 my-4">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th className="text-primary">Rating</th>
+                                <td>{parseTuple(movie.rating)[1]}</td>
+                                <th></th>
+                                <td>
+                                    <span className="fa fa-star text-primary mr-1"></span>
+                                    {movie.average_user_rating}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th className="text-primary">Release Date</th>
+                                <td>{release_date_str}</td>
+                                <th></th>
+                                <td>
+                                    <span className="fa fa-line-chart text-primary mr-1"></span>
+                                    {movie.popularity}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div className="row m-2">
+                <div className="my-2">
                     <button
                         className="btn btn-primary w-100"
                         onClick={() => this.setLightBoxToggler(!this.state.lightBoxToggler)}>
-                        <span className="fa fa-picture-o mr-2"> </span> View Images
+                        <span className="fa fa-picture-o mr-2"> </span> View Gallery
                         </button>
                     <FsLightbox
                         toggler={this.state.lightBoxToggler}
@@ -100,9 +116,9 @@ class MovieDetail extends Component {
                     />
                 </div>
                 <h1 className="text-primary py-2">Crew</h1>
-                <div className="row my-4" style={{ maxHeight: '50vh', overflow: 'auto' }}>
+                <div className="my-4" style={{ maxHeight: '50vh', overflow: 'auto' }}>
                     <table
-                        className="table table-dark bg-dark table-borderless table-striped table-sm">
+                        className="table rounded table-dark bg-dark table-borderless table-striped table-sm">
                         <thead>
                             <tr>
                                 <th scope="col"></th>
