@@ -29,7 +29,7 @@ from .permissions import IsOwnerOrReadOnly
 class MovieViewSet(viewsets.ModelViewSet):
     queryset = Movie.objects.annotate(
         average_user_rating=Avg("user_ratings__rating")
-    ).all()
+    )
     serializer_class = MovieSerializer
     pagination_class = LimitOffsetPagination
 
@@ -56,6 +56,38 @@ class MovieViewSet(viewsets.ModelViewSet):
             .filter(rank__gt=0.009)
             .order_by("-rank")
         )
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @action(
+        methods=["get"],
+        url_path="list/highest_rated",
+        detail=False,
+    )
+    def highest_rated(self, request, *args, **kwargs):
+        queryset = self.get_queryset().order_by("-average_user_rating")
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @action(
+        methods=["get"],
+        url_path="list/recommended",
+        detail=False,
+    )
+    def recommended(self, request, *args, **kwargs):
+        queryset = self.get_queryset().order_by("-popularity")
 
         page = self.paginate_queryset(queryset)
         if page is not None:
