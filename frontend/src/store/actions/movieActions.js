@@ -3,8 +3,10 @@ import * as types from './types';
 import { MOVIE_SERVER_API_URL } from '../hosts'
 import { createErrorResponseAction } from './utilities'
 
-const MOVIE_PEEK_LIST_LIMIT = 10;
-const MOVIE_PEEK_LIST_URL = `${MOVIE_SERVER_API_URL}/?limit=${MOVIE_PEEK_LIST_LIMIT}`;
+const MOVIE_LIST_LIMIT = 10;
+const MOVIE_PEEK_LIST_URL = `${MOVIE_SERVER_API_URL}/?limit=${MOVIE_LIST_LIMIT}`;
+const MOVIE_FAN_FAVORITE_LIST_URL = `${MOVIE_SERVER_API_URL}/list/highest_rated/?limit=${MOVIE_LIST_LIMIT}`;
+const MOVIE_RECOMMENDATION_LIST_URL = `${MOVIE_SERVER_API_URL}/list/recommended/?limit=${MOVIE_LIST_LIMIT}`;
 const MOVIE_DETAIL_URL = MOVIE_SERVER_API_URL;
 const MOVIE_RATING_URL = `${MOVIE_SERVER_API_URL}/ratings/`;
 const MOVIE_REVIEW_URL = `${MOVIE_SERVER_API_URL}/reviews/`;
@@ -208,17 +210,56 @@ export const searchMovie = (searchString) => dispatch => {
     });
 }
 
-
-export const listRecommendedMovies = () => dispatch => {
-    dispatch({
-        type: types.MOVIE_RECOMMENDTION_LIST,
-        payload: {} // TODO:
-    })
+const listFanFavoriteMoviesRequest = () => {
+    return {
+        type: types.MOVIE_FAN_FAVORITE_LIST_REQUEST,
+        payload: {
+            status: 'loading'
+        }
+    }
 }
 
 export const listFanFavoriteMovies = () => dispatch => {
-    dispatch({
-        type: types.MOVIE_FAN_FAVORITE_LIST,
-        payload: {} // TODO:
-    })
+    dispatch(listFanFavoriteMoviesRequest());
+    axios.get(MOVIE_FAN_FAVORITE_LIST_URL).then(
+        (response) => {
+            dispatch({
+                type: types.MOVIE_FAN_FAVORITE_LIST_RESPONSE,
+                payload: {
+                    fanFavorites: response.data.results,
+                    nextFanFavoritesUrl: response.data.next,
+                    status: 'loaded'
+                }
+            })
+        }
+    ).catch(({ response }) => {
+        dispatch(createErrorResponseAction(types.MOVIE_FAN_FAVORITE_LIST_RESPONSE, response));
+    });
+}
+
+const listRecommendedMoviesRequest = () => {
+    return {
+        type: types.MOVIE_RECOMMENDTION_LIST_REQUEST,
+        payload: {
+            status: 'loading'
+        }
+    }
+}
+
+export const listRecommendedMovies = () => dispatch => {
+    dispatch(listRecommendedMoviesRequest());
+    axios.get(MOVIE_RECOMMENDATION_LIST_URL).then(
+        (response) => {
+            dispatch({
+                type: types.MOVIE_RECOMMENDTION_LIST_RESPONSE,
+                payload: {
+                    recommendations: response.data.results,
+                    nextRecommentationsUrl: response.data.next,
+                    status: 'loaded'
+                }
+            })
+        }
+    ).catch(({ response }) => {
+        dispatch(createErrorResponseAction(types.MOVIE_RECOMMENDTION_LIST_RESPONSE, response));
+    });
 }
