@@ -155,3 +155,26 @@ class UserMovieReview(models.Model):
     )
 
     review = models.TextField("Review", max_length=1024)
+
+
+class WishList(models.Model):
+    user = models.ForeignKey(
+        User,
+        verbose_name="User",
+        on_delete=models.CASCADE,
+        related_name="wishlist",
+    )
+
+    movie = models.ForeignKey(
+        Movie,
+        verbose_name="Movie",
+        on_delete=models.CASCADE,
+        related_name="wishlisted_by",
+    )
+
+    time_added = models.DateTimeField(
+        "Time movie was wish listed", auto_now=False, auto_now_add=True
+    )
+
+    class Meta:
+        ordering = ("-time_added",)
