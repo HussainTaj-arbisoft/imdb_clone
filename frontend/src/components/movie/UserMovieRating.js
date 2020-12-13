@@ -72,6 +72,10 @@ class UserMovieRating extends Component {
                             statusCode={currentUserRating.statusCode}
                             statusText={currentUserRating.statusText}
                             errorMessage={currentUserRating.errorMessage}
+                            circularProgressIndicatorProps={{
+                                height: "20px",
+                                width: "20px"
+                            }}
                         >
                             <p>
                                 <span className="fa fa-star text-primary mr-2"></span>
@@ -84,6 +88,10 @@ class UserMovieRating extends Component {
                             statusCode={currentUserReview.statusCode}
                             statusText={currentUserReview.statusText}
                             errorMessage={currentUserReview.errorMessage}
+                            circularProgressIndicatorProps={{
+                                height: "20px",
+                                width: "20px"
+                            }}
                         >
                             <p>
                                 {this.props.currentUserReview.review}
@@ -96,7 +104,7 @@ class UserMovieRating extends Component {
         return (
             <div className="p-2 bg-dark ">
                 {currentRatingReviewElement}
-                <h1 className="text-primary mt-2">Rate this video</h1>
+                <h3 className="text-primary mt-4">Rate this video</h3>
                 <div className="w-100">
                     <div className="form-group d-flex align-items-center">
                         <ReactStars
