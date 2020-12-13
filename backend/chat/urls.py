@@ -7,5 +7,5 @@ router.register("message", views.MessageViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("contacts", views.MessageContacts.as_view()),
+    path("contacts/", views.MessageContacts.as_view()),
 ]

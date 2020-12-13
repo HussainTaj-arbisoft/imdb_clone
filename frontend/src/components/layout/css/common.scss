@@ -1,0 +1,10 @@
+.hyperlinkCard {
+    text-decoration: none;
+    &:hover {
+        text-decoration: none;
+    }
+    & > div:hover {
+        background-color: #181818 !important;
+        cursor: pointer;
+    }
+}

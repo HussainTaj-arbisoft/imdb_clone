@@ -59,3 +59,32 @@ export const listUserContactMessages = (user_id) => dispatch => {
         dispatch(createErrorResponseAction(types.CHAT_USER_CONTACT_MESSAGES_RESPONSE, response));
     });
 }
+
+
+const listUserContactsRequest = () => {
+    return {
+        type: types.CHAT_USER_CONTACTS_LIST_REQUEST,
+        payload: {
+            status: 'loading'
+        }
+    }
+}
+
+export const listUserContacts = () => dispatch => {
+    dispatch(listUserContactsRequest());
+    let url = `${CHAT_SERVER_API_URL}/contacts/`;
+    axios.get(url).then(
+        (response) => {
+            console.log(response)
+            dispatch({
+                type: types.CHAT_USER_CONTACTS_LIST_RESPONSE,
+                payload: {
+                    users: response.data,
+                    status: 'loaded'
+                }
+            });
+        }
+    ).catch(({ response }) => {
+        dispatch(createErrorResponseAction(types.CHAT_USER_CONTACTS_LIST_RESPONSE, response));
+    });
+}

@@ -1,13 +1,17 @@
+import itertools
+
 from rest_framework.mixins import ListModelMixin
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.generics import ListAPIView
 from django.contrib.auth import get_user_model
 from rest_framework.decorators import action
 
 from django.db.models import Q
+from django.db.models import Sum
 
 from .serializers import MessageSerializer, UserSerializer
 from .models import Message
@@ -55,7 +59,7 @@ class MessageViewSet(GenericViewSet, ListModelMixin):
         return Response(serializer.data)
 
 
-class MessageContacts(APIView):
+class MessageContacts(ListAPIView):
     serializer_class = UserSerializer
     pagination_class = LimitOffsetPagination
     permission_classes = [IsAuthenticated]
@@ -63,7 +67,7 @@ class MessageContacts(APIView):
     def get_queryset(self):
         return User.objects
 
-    def list(self):
+    def list(self, request, *args, **kwargs):
         """
         Return a list of last messages sent by each unqiue sender to
         this user.
@@ -76,15 +80,10 @@ class MessageContacts(APIView):
             .distinct("receiver", "sender")
             .values_list("receiver", "sender")
         )
-        # The user_receiver_sender_ids is in form [(receiver, sender), (...), ...]
-        # Turning it into [(receiver, ...), (sender, ...)]
-        user_receiver_sender_lists = list(zip(*user_receiver_sender_ids))
-        # Combining the lists
-        user_ids_list = [
-            *user_receiver_sender_lists[0],
-            *user_receiver_sender_lists[1],
-        ]
+        user_ids_list = list(sum(user_receiver_sender_ids, ()))
         user_ids = set(user_ids_list)  # Get unique ids
         user_ids.remove(self.request.user.id)
 
-        return User.objects.filter(id__in=user_ids)
+        queryset = User.objects.filter(id__in=user_ids)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)

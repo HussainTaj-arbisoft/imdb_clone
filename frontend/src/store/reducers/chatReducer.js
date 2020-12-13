@@ -15,6 +15,13 @@ const chatReducer = (state = initialState, action) => {
                     ...action.payload
                 }
             });
+        case types.CHAT_USER_CONTACTS_LIST_REQUEST:
+        case types.CHAT_USER_CONTACTS_LIST_RESPONSE:
+            return Object.assign({}, state, {
+                contacts: {
+                    ...action.payload
+                }
+            });
         default:
             return state;
     }
