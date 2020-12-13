@@ -52,6 +52,9 @@ class Movie(models.Model):
         upload_to=_get_movie_poster_image_url,
         max_length=2048,
     )
+    popularity = models.DecimalField(
+        "Popularity", max_digits=4, decimal_places=1
+    )
 
     class Meta:
         ordering = ("-release_date",)
