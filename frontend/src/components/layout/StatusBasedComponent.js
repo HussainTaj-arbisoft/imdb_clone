@@ -8,8 +8,8 @@ export default function StatusBasedComponent(props) {
             return (
                 <CircularProgressIndicator
                     bottomText={props.loadingText}
-                    sizeClass={props.spinnerSizeClass}
                     className={props.className}
+                    {...props.circularProgressIndicatorProps}
                 />
             );
         case "error":

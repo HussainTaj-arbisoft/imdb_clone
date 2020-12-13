@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 
 
 import '../layout/css/swiperCustomizations.scss'
+import StatusBasedComponent from '../layout/StatusBasedComponent'
 import * as movieActions from './../../store/actions/movieActions'
 
 import MoviePosterSwiper from './MoviePosterSwiper'
@@ -17,21 +18,28 @@ class MovieRecommendationsList extends Component {
     }
 
     render() {
-        if (this.props.movies) {
-            return (
-                <div className="py-4 text-left">
-                    <h1 className="text-left text-primary">What to watch</h1>
-                    <MoviePosterSwiper movies={this.props.movies} />
-                </div>
-            )
-        }
-        return <p className="p-4 text-primary">Loading...</p>
+        let movies = this.props.recommendations;
+        return (
+            <div className="py-4 text-left">
+                <h1 className="text-left text-primary">Recommendations</h1>
+                <StatusBasedComponent
+                    loadingText={"Loading recommendations..."}
+                    status={this.props.status}
+                    statusCode={this.props.statusCode}
+                    statusText={this.props.statusText}
+                    errorMessage={this.props.errorMessage}
+                    className="text-white"
+                >
+                    <MoviePosterSwiper movies={movies} />
+                </StatusBasedComponent>
+            </div>
+        )
     }
 }
 
 const mapStateToProps = (state) => {
     return {
-        movies: state.movies.recommendations
+        ...state.movies.recommendations
     }
 };
 

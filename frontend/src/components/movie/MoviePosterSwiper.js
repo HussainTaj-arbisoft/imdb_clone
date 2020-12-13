@@ -20,11 +20,7 @@ export default function MoviePosterSwiper(props) {
             {
                 props.movies.map((movie) => (
                     <SwiperSlide key={movie.id} style={{ width: '200px' }}>
-                        <MoviePosterCard
-                            title={movie.title}
-                            rating={movie.rating}
-                            posterUrl={movie.posterUrl}
-                        />
+                        <MoviePosterCard movie={movie} />
                     </SwiperSlide>
                 ))
             }
