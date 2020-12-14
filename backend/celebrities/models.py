@@ -21,7 +21,7 @@ class Celebrity(models.Model):
     )
     description = models.TextField("Description")
     popularity_score = models.DecimalField(
-        "Popularity Score", max_digits=2, decimal_places=2
+        "Popularity Score", max_digits=4, decimal_places=1
     )
     image = models.ImageField(
         "Celebrity Image",
