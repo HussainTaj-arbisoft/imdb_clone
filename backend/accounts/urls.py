@@ -9,4 +9,5 @@ urlpatterns = [
     path("", include(router.urls)),
     path("", include("djoser.urls")),
     path("", include("djoser.urls.authtoken")),
+    path("update_last_seen/", views.UpdateLastSeen.as_view()),
 ]
