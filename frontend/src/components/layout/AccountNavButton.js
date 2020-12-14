@@ -23,8 +23,14 @@ class AccountNavButton extends Component {
                         {this.props.auth.user.first_name}
                     </button>
                     <div className="dropdown-menu bg-dark">
-                        <button
+                        <Link
                             className="dropdown-item btn btn-primary bg-dark text-light"
+                            to="/movie/wishlist/"
+                        >
+                            <span className="fa fa-bookmark"></span> Wish List
+                        </Link>
+                        <button
+                            className="dropdown-item btn btn-primary bg-dark text-light mt-1"
                             onClick={this.signOut}>
                             <span className="fa fa-sign-out"></span> Sign Out
                         </button>

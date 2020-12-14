@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import '../layout/css/common.scss'
+import AddToWishListButton from './AddToWishListButton'
 
 export default function MoviePosterCard(props) {
     return (
@@ -15,9 +16,7 @@ export default function MoviePosterCard(props) {
                     >
                         {props.movie.title}
                     </h5>
-                    <button href="/" className="btn btn-secondary text-middle w-100">
-                        <span className="fa fa-plus"></span> Wishlist
-                    </button>
+                    <AddToWishListButton movieId={props.movie.id} />
                     <div className="d-flex justify-content-between pt-2">
                         <button className="btn text-light">
                             <span className="fa fa-play pr-1"></span>
