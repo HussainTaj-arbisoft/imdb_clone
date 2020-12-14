@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom'
 import AuthenticateUser from '../auth/AuthenticateUser'
 
 import UserChat from './UserChat'
@@ -22,6 +22,7 @@ export default class ChatRouter extends Component {
                         <UserChat />
                     </AuthenticateUser>
                 </Route>
+                <Redirect to={`${this.props.match.path}/users`} />
             </Switch>
         )
     }
