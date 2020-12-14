@@ -10,10 +10,14 @@ export default function MoviePosterCard(props) {
                 <div className="card-body">
                     <span className="fa fa-star text-primary">  </span>
                     <span> {props.movie.average_user_rating} </span>
-                    <h5 className="card-title">{props.movie.title}</h5>
+                    <h5 className="card-title text-truncate"
+                        title={props.movie.title}
+                    >
+                        {props.movie.title}
+                    </h5>
                     <button href="/" className="btn btn-secondary text-middle w-100">
                         <span className="fa fa-plus"></span> Wishlist
-                                            </button>
+                    </button>
                     <div className="d-flex justify-content-between pt-2">
                         <button className="btn text-light">
                             <span className="fa fa-play pr-1"></span>
