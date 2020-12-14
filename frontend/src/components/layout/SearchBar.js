@@ -36,7 +36,7 @@ class SearchBar extends Component {
             <Link to={`/movie/${movie.id}`} className="text-decoration-none" key={movie.id}>
                 <div className="d-flex m-2 align-items-center shadow rounded">
                     <img
-                        src="https://upload.wikimedia.org/wikipedia/en/0/0e/The_Boss_Baby_poster.jpg"
+                        src={movie.poster_image}
                         width="70" alt="poster"
                     />
                     <div className="w-100 align-self-start p-2">
