@@ -76,7 +76,6 @@ export const listUserContacts = () => dispatch => {
     let url = `${CHAT_SERVER_API_URL}/contacts/`;
     axios.get(url).then(
         (response) => {
-            console.log(response)
             dispatch({
                 type: types.CHAT_USER_CONTACTS_LIST_RESPONSE,
                 payload: {
@@ -103,7 +102,6 @@ export const updateLastSeen = () => dispatch => {
     dispatch(updateLastSeenRequest());
     axios.get(CHAT_UPDATE_LAST_SEEN_URL).then(
         (response) => {
-            console.log(response)
             dispatch({
                 type: types.CHAT_UPDATE_LAST_SEEN_RESPONSE,
                 payload: {
@@ -113,7 +111,6 @@ export const updateLastSeen = () => dispatch => {
             });
         }
     ).catch(({ response }) => {
-        console.log(response)
         dispatch(createErrorResponseAction(types.CHAT_UPDATE_LAST_SEEN_RESPONSE, response));
     });
 }
