@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import * as chatActions from '../../store/actions/chatActions'
 import Header from '../layout/Header';
 import StatusBasedComponent from '../layout/StatusBasedComponent';
+import UpdateLastSeen from './UpdateLastSeen';
 import UserContactCard from './UserContactCard'
 
 
@@ -27,7 +28,7 @@ class UserList extends Component {
                     className="text-white"
                 >
                     {users.map((user) => (
-                        <UserContactCard user={user} />
+                        <UserContactCard user={user} key={user.id} />
                     ))}
                 </StatusBasedComponent>
             </div>
@@ -47,7 +48,7 @@ class UserList extends Component {
                     <div className="text-light">
                         {
                             contacts.map((user) => (
-                                <UserContactCard user={user} />
+                                <UserContactCard user={user} key={user.id} />
                             ))
                         }
                     </div>
@@ -63,6 +64,7 @@ class UserList extends Component {
                         {usersList}
                     </div>
                 </div>
+                <UpdateLastSeen />
             </div>
 
         )

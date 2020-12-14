@@ -8,3 +8,18 @@
         cursor: pointer;
     }
 }
+
+.menuWithHyperlinkItems {
+    & > a {
+        color: rgb(236, 236, 236);
+        &:hover {
+            background-color: #181818;
+            color:white;
+        }
+
+        &:focus {
+            background-color:  #F5C518;
+            color: #181818 !important;
+        }
+    }
+}

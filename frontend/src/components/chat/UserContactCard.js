@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { timeBetweenDatesText } from './utilities';
+import LastSeen from './LastSeen.js'
 import '../layout/css/common.scss'
 
 export default function UserContactCard(props) {
@@ -12,7 +12,6 @@ export default function UserContactCard(props) {
                 userId: user.id
             }
         }}
-            key={user.id}
             className="hyperlinkCard"
         >
             <div className="card bg-dark my-3">
@@ -33,9 +32,7 @@ export default function UserContactCard(props) {
                         <h5 className="card-title">{user.first_name} {user.last_name}</h5>
                         <p className="card-text my-0">{user.email}</p>
                         <p className="card-text my-0">
-                            <small className="text-muted">
-                                Last seen {timeBetweenDatesText(new Date(user.last_seen))} ago.
-                                    </small>
+                            <LastSeen user={user} className="card-text my-0" />
                         </p>
                     </div>
                 </div>

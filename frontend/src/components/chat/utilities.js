@@ -17,3 +17,8 @@ export function timeBetweenDatesText(date1, date2 = new Date()) {
 
     return duration_text;
 }
+
+export function isDateInLastSeconds(date, seconds) {
+    let time = (new Date() - date) / 1000;
+    return (time < seconds);
+}

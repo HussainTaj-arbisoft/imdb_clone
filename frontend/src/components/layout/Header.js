@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import logo from '../../logo.svg';
 import AuthenticateUser from '../auth/AuthenticateUser';
 import AccountNavButton from './AccountNavButton';
 import SearchBar from './SearchBar';
+
+import '../layout/css/common.scss'
 
 
 class Header extends Component {
@@ -38,10 +41,17 @@ class Header extends Component {
 
                         <div className="navbar-nav d-flex w-100">
                             <div className="nav-item mx-2">
-                                <button className="btn btn-dark text-nowrap">
-                                    <span className="fa fa-bars align-middle"></span>
-                                    <span className="ml-2 align-middle">Menu</span>
-                                </button>
+                                <div className="dropdown input-group-prepend text-light">
+                                    <button className="btn btn-dark text-nowrap" type="button" id="menuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span className="fa fa-bars align-middle"></span>
+                                        <span className="ml-2 align-middle">Menu</span>
+                                    </button>
+                                    <div className="dropdown-menu bg-dark menuWithHyperlinkItems" aria-labelledby="menuButton">
+                                        <Link className="dropdown-item" to="/chat/users/">
+                                            <span className="fa fa-comments mr-1"></span> Chat
+                                        </Link>
+                                    </div>
+                                </div>
                             </div>
                             <div className="d-none d-md-block flex-fill pr-4">
                                 <SearchBar className="w-100 h-100" />

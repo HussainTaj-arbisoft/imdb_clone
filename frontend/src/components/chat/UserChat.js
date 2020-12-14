@@ -5,8 +5,9 @@ import withAuth from '../auth/withAuth';
 import Header from '../layout/Header';
 import StatusBasedComponent from '../layout/StatusBasedComponent';
 import ChatService from './ChatService';
+import LastSeen from './LastSeen';
 import MessageBubble from './MessageBubble';
-import { timeBetweenDatesText } from './utilities'
+import UpdateLastSeen from './UpdateLastSeen';
 
 class UserChat extends Component {
 
@@ -95,13 +96,15 @@ class UserChat extends Component {
         }
 
         if (this.chatServiceInstance.isClosed()) {
-            return (<p className="text-light text-center">Connection is closed.</p>);
+            return (
+                <div>
+                    <Header />
+                    <p className="text-light text-center">Connection is closed.</p>
+                </div>
+            );
         }
 
         let userInfo = this.state.user_info;
-        let lastSeenTime = (userInfo?.last_seen
-            ? timeBetweenDatesText(new Date(userInfo?.last_seen))
-            : "undefined time");
 
         let contactInfo = (
             <div className="bg-dark p-2 my-2 rounded d-flex align-items-center">
@@ -109,16 +112,17 @@ class UserChat extends Component {
                     style={{ objectFit: "cover", objectPosition: "top" }}
                     className="rounded mx-2"
                 />
-                <p className="text-light font-weight-bold my-0">
-                    {userInfo?.first_name} {userInfo?.last_name}
-                    <br />
-                    <small className="text-secondary"> Last Seen {lastSeenTime} ago</small>
-                </p>
+                <div>
+                    <p className="text-light font-weight-bold my-0">
+                        {userInfo?.first_name} {userInfo?.last_name}
+                    </p>
+                    <LastSeen user={userInfo} />
+                </div>
             </div>
         );
 
         let messageInputBar = (
-            <div className="input-group input-group-sm mb-3">
+            <div className="input-group input-group-sm mb-1 mt-2">
                 <input type="text" className="form-control"
                     placeholder="Your message" aria-label="Your message"
                     aria-describedby="message-input"
@@ -156,6 +160,7 @@ class UserChat extends Component {
                         {messageInputBar}
                     </div>
                 </StatusBasedComponent>
+                <UpdateLastSeen />
             </div>
         )
     }
