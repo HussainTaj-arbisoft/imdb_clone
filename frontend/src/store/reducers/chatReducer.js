@@ -22,6 +22,13 @@ const chatReducer = (state = initialState, action) => {
                     ...action.payload
                 }
             });
+        case types.CHAT_UPDATE_LAST_SEEN_REQUEST:
+        case types.CHAT_UPDATE_LAST_SEEN_RESPONSE:
+            return Object.assign({}, state, {
+                lastSeen: {
+                    ...action.payload
+                }
+            });
         default:
             return state;
     }
