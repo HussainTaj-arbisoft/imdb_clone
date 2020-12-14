@@ -2,7 +2,10 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.generics import ListAPIView
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import (
+    IsAuthenticatedOrReadOnly,
+    IsAuthenticated,
+)
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import status
 from rest_framework.decorators import action
@@ -16,12 +19,19 @@ from django.contrib.postgres.search import (
 
 from django.db.models.aggregates import Avg
 
-from .models import Movie, MovieCrew, UserMovieRating, UserMovieReview
+from .models import (
+    Movie,
+    MovieCrew,
+    UserMovieRating,
+    UserMovieReview,
+    WishList,
+)
 from .serializers import (
     MovieSerializer,
     MovieCrewSerializer,
     UserMovieRatingSerializer,
     UserMovieReviewSerializer,
+    WishListSerialiser,
 )
 from .permissions import IsOwnerOrReadOnly
 
@@ -188,3 +198,29 @@ class UserMovieReviewViewSet(viewsets.ModelViewSet):
         ).first()
 
         return Response(self.serializer_class(review).data)
+
+
+class WishListViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+    serializer_class = WishListSerialiser
+    pagination_class = LimitOffsetPagination
+    queryset = WishList.objects
+
+    def get_queryset(self):
+        return super().get_queryset().filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        if serializer.validated_data.get("user") != self.request.user:
+            raise AuthenticationFailed(
+                "User that is trying to review is not the user signed in.",
+                status.HTTP_406_NOT_ACCEPTABLE,
+            )
+        wishListItem = WishList.objects.filter(
+            movie=serializer.validated_data.get("movie"),
+            user=serializer.validated_data.get("user"),
+        ).first()
+
+        if wishListItem is None:
+            super().perform_create(serializer)
+
+        return Response("Already there.")

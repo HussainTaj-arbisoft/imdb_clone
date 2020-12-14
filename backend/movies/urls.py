@@ -5,6 +5,7 @@ from movies import views
 router = DefaultRouter()
 router.register("ratings", views.UserMovieRatingViewSet)
 router.register("reviews", views.UserMovieReviewViewSet)
+router.register("wishlist", views.WishListViewSet)
 router.register("", views.MovieViewSet)
 
 urlpatterns = [
