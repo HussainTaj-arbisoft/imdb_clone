@@ -8,6 +8,7 @@ from .models import (
     MovieCrew,
     UserMovieRating,
     UserMovieReview,
+    WishList,
 )
 from celebrities.serializers import CelebritySerializer
 
@@ -28,7 +29,7 @@ class MovieSerializer(serializers.ModelSerializer):
     trailers = MovieTrailerSerializer(many=True)
     images = MovieImageSerializer(many=True)
     average_user_rating = serializers.DecimalField(
-        max_digits=3, decimal_places=1
+        max_digits=3, decimal_places=1, required=False
     )
 
     class Meta:
@@ -53,4 +54,14 @@ class UserMovieRatingSerializer(serializers.ModelSerializer):
 class UserMovieReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserMovieReview
+        fields = "__all__"
+
+
+class WishListSerialiser(serializers.ModelSerializer):
+    movie_item = MovieSerializer(
+        source="movie", read_only=True, required=False
+    )
+
+    class Meta:
+        model = WishList
         fields = "__all__"
