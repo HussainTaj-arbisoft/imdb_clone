@@ -23,7 +23,7 @@ export default function MessageBubble(props) {
                 <div className="mx-1">
                     <div className={`${isSender ? "flex-row-reverse" : ""} d-flex justify-content-between`}>
                         <small><b>{msg.sender.first_name} {msg.sender.last_name}</b></small>
-                        <small className="text-muted">{timeString}</small>
+                        <small className="text-muted mx-1">{timeString}</small>
                     </div>
                     <span>{msg.text}</span>
                 </div>
