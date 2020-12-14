@@ -11,7 +11,7 @@ export default function CelebrityCard(props) {
                 width='150'
                 style={{ objectFit: 'cover', objectPosition: 'top' }}
             />
-            <h3>{props.name}</h3>
+            <h5>{props.name}</h5>
             <p>{props.age}</p>
         </div>
     )
