@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "movies",
     "celebrities",
     "chat",
+    "payments",
     # Dev
     "dev_tools",
 ]
