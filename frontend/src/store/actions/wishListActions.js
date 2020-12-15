@@ -20,7 +20,6 @@ export const getWishList = () => dispatch => {
     dispatch(getWishListRequest());
     axios.get(WISH_LIST_URL).then(
         (response) => {
-            console.log(response)
             dispatch({
                 type: types.MOVIE_WISH_LIST_GET_RESPONSE,
                 payload: {
@@ -56,7 +55,6 @@ export const wishListAddMovie = (movieId, userId) => dispatch => {
             })
         }
     ).catch(({ response }) => {
-        console.log(response)
         dispatch(createErrorResponseAction(types.MOVIE_WISH_LIST_ADD_RESPONSE, response));
     });
 }
@@ -70,9 +68,9 @@ const wishListRemoveMovieRequest = () => {
     }
 }
 
-export const wishListRemoveMovie = (wishListItemId) => dispatch => {
+export const wishListRemoveMovie = (wishListId) => dispatch => {
     dispatch(wishListRemoveMovieRequest());
-    axios.delete(`${WISH_LIST_URL}/?id=${wishListItemId}`).then(
+    axios.delete(`${WISH_LIST_URL}${wishListId}/`).then(
         (response) => {
             dispatch({
                 type: types.MOVIE_WISH_LIST_REMOVE_RESPONSE,

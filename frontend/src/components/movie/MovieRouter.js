@@ -4,6 +4,7 @@ import AuthenticateUser from '../auth/AuthenticateUser';
 import Home from './Home';
 
 import MovieDetail from './MovieDetail';
+import OwnedMovies from './OwnedMovies';
 import WishList from './WishList';
 
 export default function MovieRouter(props) {
@@ -13,6 +14,11 @@ export default function MovieRouter(props) {
             <Route exact path={`${props.match.path}movie/wishlist`}>
                 <AuthenticateUser>
                     <WishList />
+                </AuthenticateUser>
+            </Route>
+            <Route exact path={`${props.match.path}movie/owned`}>
+                <AuthenticateUser>
+                    <OwnedMovies />
                 </AuthenticateUser>
             </Route>
             <Route exact path={`${props.match.path}movie/:id`} component={MovieDetail} />

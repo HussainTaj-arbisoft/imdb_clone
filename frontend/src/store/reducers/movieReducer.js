@@ -69,7 +69,13 @@ const movieReducer = (state = initialState, action) => {
                     ...action.payload
                 }
             });
-
+        case types.MOVIE_OWNED_LIST_REQUEST:
+        case types.MOVIE_OWNED_LIST_RESPONSE:
+            return Object.assign({}, state, {
+                owned: {
+                    ...action.payload
+                }
+            });
         default:
             return state;
     }

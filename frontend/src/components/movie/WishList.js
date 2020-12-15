@@ -5,50 +5,22 @@ import { Link } from 'react-router-dom';
 import * as wishListActions from '../../store/actions/wishListActions'
 import Header from '../layout/Header'
 import StatusBasedComponent from '../layout/StatusBasedComponent';
+import WishListItemCard from './WishListItemCard';
 
 class WishList extends Component {
     componentDidMount() {
         this.props.getWishList();
     }
     render() {
-        console.log(this.props)
         let wishListItems = this.props.items ?? [];
-        let movies = wishListItems.map((item) => item.movie_item);
         let moviesList = (
-            movies.map((movie) => (
+            wishListItems.map((item) => (
 
-                <Link to={`/movie/${movie.id}`}
+                <Link to={`/movie/${item.movie_item.id}`}
                     className="hyperlinkCard"
+                    key={item.movie_item.id}
                 >
-                    <div className="card bg-dark my-4"
-                        style={{
-                            background: `URL(${movie.cover_image}) center`,
-                            border: "0"
-                        }}
-                    >
-                        <div className="d-flex" style={{
-                            backgroundColor: "rgba(0,0,0,0.9)"
-                        }}>
-                            <img
-                                src={movie.poster_image}
-                                className="rounded"
-                                alt="profile"
-                                width="150px"
-                                height="100%"
-                                style={{
-                                    objectFit: "cover",
-                                    objectPosition: "top",
-                                }}
-                            />
-                            <div className="d-flex flex-column px-4 justify-content-around">
-                                <h1 className="card-title user-select-none">{movie.title}</h1>
-                                <div>
-                                    <p className="card-text user-select-none">{movie.tagline}</p>
-                                    <p className="card-text user-select-none">{movie.synopsis}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <WishListItemCard movie={item.movie_item} wishListId={item.id} removeable={true} />
                 </Link>
             ))
         );
@@ -56,7 +28,7 @@ class WishList extends Component {
             <div>
                 <Header />
                 <div className="container">
-
+                    <h1 className="text-center text-primary mt-2">Your Wish List</h1>
                     <StatusBasedComponent
                         loadingText="Loading your wish list..."
                         status={this.props.status}

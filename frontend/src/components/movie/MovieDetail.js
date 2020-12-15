@@ -12,6 +12,9 @@ import Header from '../layout/Header';
 import parseTuple from '../../utilities/tuple'
 import StatusBasedComponent from '../layout/StatusBasedComponent';
 import UserMovieRating from './UserMovieRating';
+import { Link } from 'react-router-dom';
+import MovieDetailStats from './MovieDetailStats';
+import BuyMovieButton from '../payment/BuyMovieButton';
 
 SwiperCore.use([Lazy, Navigation, A11y]);
 
@@ -34,9 +37,6 @@ class MovieDetail extends Component {
         let movie = this.props.movieData;
         let crew = this.props.crewData;
         let images = movie.images.map((imageObj) => imageObj.image);
-        let release_date = new Date(movie.release_date);
-        let release_date_str = (release_date.getFullYear() + "-" +
-            release_date.getMonth() + "-" + release_date.getDate());
         return (
             <div className="container py-4 text-light">
                 <div className="row bg-dark rounded">
@@ -77,32 +77,12 @@ class MovieDetail extends Component {
                                 {movie.synopsis}
                             </p>
                         </div>
+                        <div className="d-flex align-items-center justify-content-end">
+                            <BuyMovieButton movieId={movie.id} />
+                        </div>
                     </div>
                 </div>
-                <div className="card bg-dark p-2 my-4">
-                    <table>
-                        <tbody>
-                            <tr>
-                                <th className="text-primary">Rating</th>
-                                <td>{parseTuple(movie.rating)[1]}</td>
-                                <th></th>
-                                <td>
-                                    <span className="fa fa-star text-primary mr-1"></span>
-                                    {movie.average_user_rating}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th className="text-primary">Release Date</th>
-                                <td>{release_date_str}</td>
-                                <th></th>
-                                <td>
-                                    <span className="fa fa-line-chart text-primary mr-1"></span>
-                                    {movie.popularity}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <MovieDetailStats movie={movie} />
                 <div className="my-2">
                     <button
                         className="btn btn-primary w-100"

@@ -12,6 +12,7 @@ const MOVIE_RATING_URL = `${MOVIE_SERVER_API_URL}/ratings/`;
 const MOVIE_REVIEW_URL = `${MOVIE_SERVER_API_URL}/reviews/`;
 const MOVIE_SEARCH_URL = `${MOVIE_SERVER_API_URL}/search/`;
 const MOVIE_SEARCH_RESULT_LIMIT = 10;
+const MOVIE_OWNED_URL = `${MOVIE_SERVER_API_URL}/list/owned/`;
 
 
 const listPeekMoviesRequest = () => {
@@ -261,5 +262,31 @@ export const listRecommendedMovies = () => dispatch => {
         }
     ).catch(({ response }) => {
         dispatch(createErrorResponseAction(types.MOVIE_RECOMMENDTION_LIST_RESPONSE, response));
+    });
+}
+
+const listOwnedMoviesRequest = () => {
+    return {
+        type: types.MOVIE_OWNED_LIST_REQUEST,
+        payload: {
+            status: 'loading'
+        }
+    }
+}
+
+export const listOwnedMovies = () => dispatch => {
+    dispatch(listOwnedMoviesRequest());
+    axios.get(MOVIE_OWNED_URL).then(
+        (response) => {
+            dispatch({
+                type: types.MOVIE_OWNED_LIST_RESPONSE,
+                payload: {
+                    movies: response.data,
+                    status: 'loaded'
+                }
+            })
+        }
+    ).catch(({ response }) => {
+        dispatch(createErrorResponseAction(types.MOVIE_OWNED_LIST_RESPONSE, response));
     });
 }

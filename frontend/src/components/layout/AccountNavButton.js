@@ -19,21 +19,28 @@ class AccountNavButton extends Component {
                         data-toggle="dropdown"
                         aria-haspopup="true"
                         aria-expanded="false">
-                        <span className="fa fa-user-circle fa-lg mr-1"> </span>
+                        <span className="fa fa-user-circle fa-lg mr-2"> </span>
                         {this.props.auth.user.first_name}
                     </button>
-                    <div className="dropdown-menu bg-dark">
+                    <div className="dropdown-menu bg-dark text-light menuWithHyperlinkItems">
                         <Link
-                            className="dropdown-item btn btn-primary bg-dark text-light"
+                            className="dropdown-item"
                             to="/movie/wishlist/"
                         >
-                            <span className="fa fa-bookmark"></span> Wish List
+                            <span className="fa fa-bookmark mr-2"></span> Wish List
                         </Link>
-                        <button
-                            className="dropdown-item btn btn-primary bg-dark text-light mt-1"
+                        <Link
+                            className="dropdown-item"
+                            to="/movie/owned/"
+                        >
+                            <span className="fa fa-play-circle mr-2"></span> My Orders
+                        </Link>
+                        <a
+                            href="/"
+                            className="dropdown-item mt-1"
                             onClick={this.signOut}>
-                            <span className="fa fa-sign-out"></span> Sign Out
-                        </button>
+                            <span className="fa fa-sign-out mr-2"></span> Sign Out
+                        </a>
                     </div>
                 </div>
             );
