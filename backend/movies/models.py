@@ -56,6 +56,8 @@ class Movie(models.Model):
         "Popularity", max_digits=4, decimal_places=1
     )
 
+    price = models.DecimalField("price", max_digits=9, decimal_places=2)
+
     class Meta:
         ordering = ("-release_date",)
 

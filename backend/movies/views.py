@@ -43,6 +43,15 @@ class MovieViewSet(viewsets.ModelViewSet):
     serializer_class = MovieSerializer
     pagination_class = LimitOffsetPagination
 
+    def _make_queryset_response(self, queryset):
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
     @action(
         methods=["get"],
         url_path="search/(?P<search_string>.+)",
@@ -67,13 +76,7 @@ class MovieViewSet(viewsets.ModelViewSet):
             .order_by("-rank")
         )
 
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        return self._make_queryset_response(queryset)
 
     @action(
         methods=["get"],
@@ -82,14 +85,7 @@ class MovieViewSet(viewsets.ModelViewSet):
     )
     def highest_rated(self, request, *args, **kwargs):
         queryset = self.get_queryset().order_by("-average_user_rating")
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        return self._make_queryset_response(queryset)
 
     @action(
         methods=["get"],
@@ -98,14 +94,23 @@ class MovieViewSet(viewsets.ModelViewSet):
     )
     def recommended(self, request, *args, **kwargs):
         queryset = self.get_queryset().order_by("-popularity")
+        return self._make_queryset_response(queryset)
 
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+    @action(
+        methods=["get"],
+        url_path="list/owned",
+        detail=False,
+        permission_classes=[IsAuthenticated],
+    )
+    def owned(self, request, *args, **kwargs):
+        queryset = (
+            Movie.objects.filter(
+                orders__user=request.user, orders__completed=True
+            )
+            .order_by("-orders__completed", "orders__created_time")
+            .all()
+        )
+        return self._make_queryset_response(queryset)
 
 
 class MovieCrewListAPIView(ListAPIView):
@@ -201,7 +206,7 @@ class UserMovieReviewViewSet(viewsets.ModelViewSet):
 
 
 class WishListViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+    permission_classes = [IsAuthenticated]
     serializer_class = WishListSerialiser
     pagination_class = LimitOffsetPagination
     queryset = WishList.objects
