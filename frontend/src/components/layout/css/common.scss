@@ -1,25 +1,25 @@
 .hyperlinkCard {
+  text-decoration: none;
+  &:hover {
     text-decoration: none;
-    &:hover {
-        text-decoration: none;
-    }
-    & > div:hover {
-        background-color: #181818 !important;
-        cursor: pointer;
-    }
+  }
+  & > div:hover {
+    background-color: #181818 !important;
+    cursor: pointer;
+  }
 }
 
 .menuWithHyperlinkItems {
-    & > a {
-        color: rgb(236, 236, 236);
-        &:hover {
-            background-color: #181818;
-            color:white;
-        }
-
-        &:focus {
-            background-color:  #F5C518;
-            color: #181818 !important;
-        }
+  & > a {
+    color: rgb(236, 236, 236);
+    &:hover {
+      background-color: #181818;
+      color: white;
     }
+
+    &:focus {
+      background-color: #f5c518;
+      color: #181818 !important;
+    }
+  }
 }
