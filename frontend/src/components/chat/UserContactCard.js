@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import LastSeen from "./LastSeen.js";
+
 import "../layout/css/common.scss";
+import LastSeen from "./LastSeen.js";
 
 export default function UserContactCard(props) {
   let user = props.user;

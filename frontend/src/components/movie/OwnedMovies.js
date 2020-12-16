@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-
-import * as movieActions from "./../../store/actions/movieActions";
-import StatusBasedComponent from "../layout/StatusBasedComponent";
-import Header from "../layout/Header";
-import WishListItemCard from "./WishListItemCard";
 import { Link } from "react-router-dom";
+
+import Header from "../layout/Header";
+import StatusBasedComponent from "../layout/StatusBasedComponent";
+import * as movieActions from "./../../store/actions/movieActions";
+import WishListItemCard from "./WishListItemCard";
 
 class OwnedMovies extends Component {
   componentDidMount() {

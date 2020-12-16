@@ -1,4 +1,5 @@
 import React from "react";
+
 import { timeBetweenDatesText, isDateInLastSeconds } from "./utilities";
 
 export default function LastSeen(props) {

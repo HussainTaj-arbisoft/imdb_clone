@@ -1,4 +1,5 @@
 import React from "react";
+
 import { ReactComponent as AnimatedIcon } from "./icon/CirularProgressIndicatorAnimatedIcon.svg";
 
 export default function CircularProgressIndicator(props) {

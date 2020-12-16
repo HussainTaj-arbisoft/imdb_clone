@@ -1,6 +1,7 @@
 import axios from "axios";
-import * as types from "./types";
+
 import { MOVIE_SERVER_API_URL } from "../hosts";
+import * as types from "./types";
 import { createErrorResponseAction } from "./utilities";
 
 const WISH_LIST_URL = `${MOVIE_SERVER_API_URL}/wishlist/`;

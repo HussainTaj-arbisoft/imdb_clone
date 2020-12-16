@@ -1,7 +1,7 @@
 import axios from "axios";
 
-import * as types from "./types";
 import { CELEBRITY_SERVER_API_URL } from "../hosts";
+import * as types from "./types";
 
 const CELEBRITIES_BORN_TODAY_URL = `${CELEBRITY_SERVER_API_URL}/born_today?limit=10`;
 

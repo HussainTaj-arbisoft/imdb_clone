@@ -1,6 +1,7 @@
 import axios from "axios";
-import * as types from "./types";
+
 import { CHAT_SERVER_API_URL, AUTH_SERVER_API_URL } from "../hosts";
+import * as types from "./types";
 import { createErrorResponseAction } from "./utilities";
 
 const CHAT_USER_LIST_URL = `${AUTH_SERVER_API_URL}/user_list/?order_by=-last_seen`;

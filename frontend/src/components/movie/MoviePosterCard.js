@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+
 import "../layout/css/common.scss";
 import AddToWishListButton from "./AddToWishListButton";
 

@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+
 import logo from "../../logo.svg";
 import AuthenticateUser from "../auth/AuthenticateUser";
+import "../layout/css/common.scss";
 import AccountNavButton from "./AccountNavButton";
 import SearchBar from "./SearchBar";
-
-import "../layout/css/common.scss";
 
 class Header extends Component {
   render() {

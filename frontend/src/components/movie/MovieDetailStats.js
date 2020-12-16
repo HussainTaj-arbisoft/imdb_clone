@@ -1,4 +1,5 @@
 import React from "react";
+
 import parseTuple from "../../utilities/tuple";
 
 export default function MovieDetailStats(props) {

@@ -1,8 +1,8 @@
 import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
+
 import AuthenticateUser from "../auth/AuthenticateUser";
 import Home from "./Home";
-
 import MovieDetail from "./MovieDetail";
 import OwnedMovies from "./OwnedMovies";
 import WishList from "./WishList";

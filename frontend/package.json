@@ -58,6 +58,19 @@
   },
   "proxy": "http://127.0.0.1:8000",
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/preset-react": "^7.12.10",
+    "@trivago/prettier-plugin-sort-imports": "^1.4.1",
     "prettier": "^2.2.1"
+  },
+  "prettier": {
+    "importOrder": [
+      "^@core/(.*)$",
+      "^@server/(.*)$",
+      "^@ui/(.*)$",
+      "^[./]"
+    ],
+    "importOrderSeparation": true
   }
 }

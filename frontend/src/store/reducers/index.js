@@ -1,8 +1,9 @@
 import { combineReducers } from "redux";
-import movieReducer from "./movieReducer";
-import celebrityReducer from "./celebrityReducer";
+
 import authReducer from "./authReducer";
+import celebrityReducer from "./celebrityReducer";
 import chatReducer from "./chatReducer";
+import movieReducer from "./movieReducer";
 import wishListReducer from "./wishListReducer";
 
 const rootReducer = combineReducers({

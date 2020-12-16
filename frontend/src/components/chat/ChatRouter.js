@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-
 import { Switch, Route, Redirect } from "react-router-dom";
-import AuthenticateUser from "../auth/AuthenticateUser";
 
+import AuthenticateUser from "../auth/AuthenticateUser";
 import UserChat from "./UserChat";
 import UserList from "./UserList";
 

@@ -1,5 +1,6 @@
 import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
+
 import AuthenticateUser from "../auth/AuthenticateUser";
 import Checkout from "./Checkout";
 

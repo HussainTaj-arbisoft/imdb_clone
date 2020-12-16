@@ -9,7 +9,6 @@ import * as movieActions from "./../../store/actions/movieActions";
 import StatusBasedComponent from "../layout/StatusBasedComponent";
 import WishListItemCard from "../movie/WishListItemCard";
 import MovieDetailStats from "../movie/MovieDetailStats";
-import { replace } from "formik";
 
 const stripePromise = loadStripe(
   "pk_test_51HyMdNA2mXrNBb00gGItbwzQbXH1PyQxkjQCQt4GKDEeo7W6RGYYChj6pgxK8n6Yl3SN4SUXxE0cCprmsxg0W39T00cqMAnuaB"
@@ -66,20 +65,20 @@ class Checkout extends Component {
               {isSuccess ? (
                 <h2>Payment Received. Wait a while for confirmation.</h2>
               ) : (
-                <>
-                  {isCanceled ? <h3>Payment Canceled</h3> : null}
-                  <div className="text-white text-center">
-                    <h2>Price</h2>
-                    <h2 className="text-primary">${movie?.price}</h2>
-                  </div>
-                  <button
-                    className="btn btn-primary w-100 my-2"
-                    onClick={this.handleClick}
-                  >
-                    Checkout
+                  <>
+                    {isCanceled ? <h3>Payment Canceled</h3> : null}
+                    <div className="text-white text-center">
+                      <h2>Price</h2>
+                      <h2 className="text-primary">${movie?.price}</h2>
+                    </div>
+                    <button
+                      className="btn btn-primary w-100 my-2"
+                      onClick={this.handleClick}
+                    >
+                      Checkout
                   </button>
-                </>
-              )}
+                  </>
+                )}
             </div>
           </StatusBasedComponent>
         </div>

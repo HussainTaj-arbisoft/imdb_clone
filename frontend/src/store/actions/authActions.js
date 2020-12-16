@@ -1,8 +1,8 @@
-import * as types from "./types";
 import axios from "axios";
 import Cookies from "universal-cookie";
 
 import { AUTH_SERVER_API_URL } from "../hosts";
+import * as types from "./types";
 
 const SIGNIN_TOKEN_URL = `${AUTH_SERVER_API_URL}/token/login/`;
 const USER_ACCOUNT_INFO_URL = `${AUTH_SERVER_API_URL}/users/me/`;

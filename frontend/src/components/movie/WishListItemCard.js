@@ -1,4 +1,5 @@
 import React from "react";
+
 import RemoveFromWishListButton from "./RemoveFromWishListButton";
 
 export default function WishListItemCard(props) {
