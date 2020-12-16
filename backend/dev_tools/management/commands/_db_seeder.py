@@ -2,23 +2,21 @@ import datetime
 import decimal
 import random
 import time
-import decimal
 
-from django.utils.timezone import make_aware
 import faker
+from django.utils.timezone import make_aware
 
-from accounts.models import User, Profile
+from accounts.models import Profile, User
+from celebrities.models import Celebrity
+from chat.models import Message
 from movies.models import (
     Movie,
+    MovieCrew,
     MovieImage,
     MovieTrailer,
-    MovieCrew,
     UserMovieRating,
     UserMovieReview,
 )
-from celebrities.models import Celebrity
-from chat.models import Message
-
 
 fake = faker.Faker()
 fake.add_provider(faker.providers.person)
@@ -72,9 +70,7 @@ def seed_user(users_count: int = 20):
         user.last_seen = make_aware(fake.date_time_this_year())
         user.save()
 
-        print(
-            f"Progress: {((user_number+1)/users_count * 100):.2f}%", end="\r"
-        )
+        print(f"Progress: {((user_number+1)/users_count * 100):.2f}%", end="\r")
     print()
 
 
@@ -100,6 +96,7 @@ def seed_movie(movie_count: int = 500):
             cover_image=display_images[1],
             poster_image=display_images[0],
             popularity=random.randint(0, 100),
+            price=random.randint(1, 100),
         )
         movie.save()
         counter = 0
@@ -120,9 +117,7 @@ def seed_movie(movie_count: int = 500):
             image.save()
             counter += 1
 
-        print(
-            f"Progress: {((movie_number+1)/movie_count * 100):.2f}%", end="\r"
-        )
+        print(f"Progress: {((movie_number+1)/movie_count * 100):.2f}%", end="\r")
     print()
 
 
