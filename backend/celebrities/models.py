@@ -1,12 +1,11 @@
-import uuid
 import os
+import uuid
+
 from django.db import models
 
 
 def _get_celebrity_image_url(instance, filename):
-    return (
-        f"celebrities/{instance.id}/cover_image{os.path.splitext(filename)[1]}"
-    )
+    return f"celebrities/{instance.id}/cover_image{os.path.splitext(filename)[1]}"
 
 
 class Celebrity(models.Model):
@@ -16,9 +15,7 @@ class Celebrity(models.Model):
     date_of_birth = models.DateField(
         "Date of Birth", auto_now=False, auto_now_add=False
     )
-    debut_date = models.DateField(
-        "Debut Date", auto_now=False, auto_now_add=False
-    )
+    debut_date = models.DateField("Debut Date", auto_now=False, auto_now_add=False)
     description = models.TextField("Description")
     popularity_score = models.DecimalField(
         "Popularity Score", max_digits=4, decimal_places=1

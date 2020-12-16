@@ -1,9 +1,9 @@
+from django.utils import timezone
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import LimitOffsetPagination
-from django.utils import timezone
 
-from .serializers import CelebritySerializer
 from .models import Celebrity
+from .serializers import CelebritySerializer
 
 
 class CelebritiesListAPIView(ListAPIView):

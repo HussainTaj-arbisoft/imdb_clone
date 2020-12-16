@@ -1,21 +1,18 @@
 import itertools
 
-from rest_framework.mixins import ListModelMixin
-from rest_framework.viewsets import GenericViewSet
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.generics import ListAPIView
 from django.contrib.auth import get_user_model
+from django.db.models import Q, Sum
 from rest_framework.decorators import action
+from rest_framework.generics import ListAPIView
+from rest_framework.mixins import ListModelMixin
+from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.viewsets import GenericViewSet
 
-from django.db.models import Q
-from django.db.models import Sum
-
-from .serializers import MessageSerializer, UserSerializer
 from .models import Message
-
+from .serializers import MessageSerializer, UserSerializer
 
 User = get_user_model()
 
@@ -30,9 +27,7 @@ class MessageViewSet(GenericViewSet, ListModelMixin):
         return (
             super()
             .get_queryset()
-            .filter(
-                Q(receiver=self.request.user) | Q(sender=self.request.user)
-            )
+            .filter(Q(receiver=self.request.user) | Q(sender=self.request.user))
         )
 
     @action(

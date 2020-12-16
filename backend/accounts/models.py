@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.db import models
 
 
 def _get_profile_image_url(instance, filename):
@@ -38,13 +38,9 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-    email = models.EmailField(
-        verbose_name="Email", max_length=255, unique=True
-    )
+    email = models.EmailField(verbose_name="Email", max_length=255, unique=True)
     is_admin = models.BooleanField(default=False)
-    last_seen = models.DateTimeField(
-        "Last Seen", auto_now=False, auto_now_add=True
-    )
+    last_seen = models.DateTimeField("Last Seen", auto_now=False, auto_now_add=True)
 
     REQUIRED_FIELDS = ["first_name", "last_name"]
     USERNAME_FIELD = "email"

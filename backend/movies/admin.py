@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Movie, MovieTrailer, MovieImage, MovieCrew, UserMovieRating
+from .models import Movie, MovieCrew, MovieImage, MovieTrailer, UserMovieRating
 
 
 class MovieTrailerInline(admin.TabularInline):

@@ -1,15 +1,14 @@
-from rest_framework.viewsets import GenericViewSet
-from rest_framework.mixins import ListModelMixin
+from django.utils import timezone
 from rest_framework.decorators import action
+from rest_framework.mixins import ListModelMixin
 from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.viewsets import GenericViewSet
 
-from django.utils import timezone
-
-from .serializers import UserSerializer
 from .models import User
+from .serializers import UserSerializer
 
 
 class UserListViewSet(GenericViewSet, ListModelMixin):

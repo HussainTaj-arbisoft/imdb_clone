@@ -1,11 +1,10 @@
 import os
 import uuid
 
-from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db import models
 from django.conf import settings
 from django.contrib.auth import get_user_model
-
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
 
 User = get_user_model()
 
@@ -52,9 +51,7 @@ class Movie(models.Model):
         upload_to=_get_movie_poster_image_url,
         max_length=2048,
     )
-    popularity = models.DecimalField(
-        "Popularity", max_digits=4, decimal_places=1
-    )
+    popularity = models.DecimalField("Popularity", max_digits=4, decimal_places=1)
 
     price = models.DecimalField("price", max_digits=9, decimal_places=2)
 
@@ -66,9 +63,7 @@ class Movie(models.Model):
 
 
 class MovieTrailer(models.Model):
-    movie = models.ForeignKey(
-        Movie, on_delete=models.CASCADE, related_name="trailers"
-    )
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="trailers")
     title = models.CharField(verbose_name="Title", max_length=500)
     video = models.FileField(
         "Video", upload_to=_get_movie_trailer_video_url, max_length=2048
@@ -80,13 +75,9 @@ class MovieTrailer(models.Model):
 
 
 class MovieImage(models.Model):
-    movie = models.ForeignKey(
-        Movie, on_delete=models.CASCADE, related_name="images"
-    )
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="images")
     caption = models.CharField(verbose_name="Caption", max_length=500)
-    image = models.ImageField(
-        "Image", upload_to=_get_movie_image_url, max_length=2048
-    )
+    image = models.ImageField("Image", upload_to=_get_movie_image_url, max_length=2048)
 
     def __str__(self):
         return f"{self.image}"

@@ -15,9 +15,7 @@ class Order(models.Model):
         null=True,
         related_name="orders",
     )
-    session_id = models.CharField(
-        "Checkout Session ID", max_length=200, unique=True
-    )
+    session_id = models.CharField("Checkout Session ID", max_length=200, unique=True)
     price = models.DecimalField("Price", max_digits=9, decimal_places=2)
     completed = models.BooleanField("Completed", default=False)
     completed_time = models.DateTimeField(

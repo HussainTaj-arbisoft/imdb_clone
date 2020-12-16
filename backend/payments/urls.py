@@ -1,6 +1,6 @@
-from django.urls import path, include
-from payments import views
+from django.urls import include, path
 
+from payments import views
 
 urlpatterns = [
     path(

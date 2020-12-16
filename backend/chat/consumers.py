@@ -1,9 +1,10 @@
 import json
-from channels.generic.websocket import (
-    AsyncWebsocketConsumer,
-    AsyncJsonWebsocketConsumer,
-)
+
 from channels.db import database_sync_to_async
+from channels.generic.websocket import (
+    AsyncJsonWebsocketConsumer,
+    AsyncWebsocketConsumer,
+)
 from django.db.models import Q
 
 from accounts.models import User
@@ -61,9 +62,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         self.room_group_name = f"chat_{self.ids[0]}_{self.ids[1]}"
 
         # join room group
-        await self.channel_layer.group_add(
-            self.room_group_name, self.channel_name
-        )
+        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
 
     async def disconnect(self, close_code):
         if getattr(self, "room_group_name", None) is not None:
@@ -110,13 +109,9 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             )
             return
 
-        await self.send_json(
-            {"type": "error", "reason": "Type of action is not valid"}
-        )
+        await self.send_json({"type": "error", "reason": "Type of action is not valid"})
 
     # receive message from room group
     async def chat_message(self, event):
         # Send message to WebSocket
-        await self.send_json(
-            content={"type": "message", "data": event.get("data")}
-        )
+        await self.send_json(content={"type": "message", "data": event.get("data")})

@@ -1,16 +1,17 @@
 from django.conf import settings
 from rest_framework import serializers
 
+from celebrities.serializers import CelebritySerializer
+
 from .models import (
     Movie,
+    MovieCrew,
     MovieImage,
     MovieTrailer,
-    MovieCrew,
     UserMovieRating,
     UserMovieReview,
     WishList,
 )
-from celebrities.serializers import CelebritySerializer
 
 
 class MovieTrailerSerializer(serializers.ModelSerializer):
@@ -58,9 +59,7 @@ class UserMovieReviewSerializer(serializers.ModelSerializer):
 
 
 class WishListSerialiser(serializers.ModelSerializer):
-    movie_item = MovieSerializer(
-        source="movie", read_only=True, required=False
-    )
+    movie_item = MovieSerializer(source="movie", read_only=True, required=False)
 
     class Meta:
         model = WishList

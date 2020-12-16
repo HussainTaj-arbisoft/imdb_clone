@@ -1,45 +1,28 @@
-from rest_framework import viewsets
-from rest_framework.views import APIView
-from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.generics import ListAPIView
-from rest_framework.permissions import (
-    IsAuthenticatedOrReadOnly,
-    IsAuthenticated,
-)
-from rest_framework.exceptions import AuthenticationFailed
-from rest_framework import status
-from rest_framework.decorators import action
-from rest_framework.response import Response
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.db.models import Value
-from django.contrib.postgres.search import (
-    SearchVector,
-    SearchRank,
-    SearchQuery,
-)
-
 from django.db.models.aggregates import Avg
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
+from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.generics import ListAPIView
+from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from .models import (
-    Movie,
-    MovieCrew,
-    UserMovieRating,
-    UserMovieReview,
-    WishList,
-)
+from .models import Movie, MovieCrew, UserMovieRating, UserMovieReview, WishList
+from .permissions import IsOwnerOrReadOnly
 from .serializers import (
-    MovieSerializer,
     MovieCrewSerializer,
+    MovieSerializer,
     UserMovieRatingSerializer,
     UserMovieReviewSerializer,
     WishListSerialiser,
 )
-from .permissions import IsOwnerOrReadOnly
 
 
 class MovieViewSet(viewsets.ModelViewSet):
-    queryset = Movie.objects.annotate(
-        average_user_rating=Avg("user_ratings__rating")
-    )
+    queryset = Movie.objects.annotate(average_user_rating=Avg("user_ratings__rating"))
     serializer_class = MovieSerializer
     pagination_class = LimitOffsetPagination
 
@@ -104,9 +87,7 @@ class MovieViewSet(viewsets.ModelViewSet):
     )
     def owned(self, request, *args, **kwargs):
         queryset = (
-            Movie.objects.filter(
-                orders__user=request.user, orders__completed=True
-            )
+            Movie.objects.filter(orders__user=request.user, orders__completed=True)
             .order_by("-orders__completed", "orders__created_time")
             .all()
         )
@@ -153,9 +134,7 @@ class UserMovieRatingViewSet(viewsets.ModelViewSet):
     )
     def user_movie_rating(self, request, movie_id):
         if not request.user.is_authenticated:
-            raise AuthenticationFailed(
-                "Not signed in.", status.HTTP_401_UNAUTHORIZED
-            )
+            raise AuthenticationFailed("Not signed in.", status.HTTP_401_UNAUTHORIZED)
 
         rating = UserMovieRating.objects.filter(
             movie=movie_id, user=request.user.id
@@ -194,9 +173,7 @@ class UserMovieReviewViewSet(viewsets.ModelViewSet):
     )
     def user_movie_rating(self, request, movie_id):
         if not request.user.is_authenticated:
-            raise AuthenticationFailed(
-                "Not signed in.", status.HTTP_401_UNAUTHORIZED
-            )
+            raise AuthenticationFailed("Not signed in.", status.HTTP_401_UNAUTHORIZED)
 
         review = UserMovieReview.objects.filter(
             movie=movie_id, user=request.user.id
