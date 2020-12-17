@@ -12,23 +12,31 @@ class OwnedMovies extends Component {
     this.props.listOwnedMovies();
   }
   render() {
-    console.log(this.props);
     return (
       <div>
         <Header />
         <div className="container text-light">
           <h1 className="text-center text-primary mt-2">Your Movies</h1>
-          <div>
-            {this.props.movies?.map((movie) => (
-              <Link
-                key={movie.id}
-                to={`/movie/${movie.id}/`}
-                className="hyperlinkCard"
-              >
-                <WishListItemCard movie={movie} removeable={false} />
-              </Link>
-            ))}
-          </div>
+          <StatusBasedComponent
+            loadingText={"Loading your movies..."}
+            status={this.props.status}
+            statusCode={this.props.statusCode}
+            statusText={this.props.statusText}
+            errorMessage={this.props.errorMessage}
+            className="text-white"
+          >
+            <div>
+              {this.props.movies?.map((movie) => (
+                <Link
+                  key={movie.id}
+                  to={`/movie/${movie.id}/`}
+                  className="hyperlinkCard"
+                >
+                  <WishListItemCard movie={movie} removeable={false} />
+                </Link>
+              ))}
+            </div>
+          </StatusBasedComponent>
         </div>
       </div>
     );
