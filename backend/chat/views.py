@@ -27,7 +27,9 @@ class MessageViewSet(GenericViewSet, ListModelMixin):
         return (
             super()
             .get_queryset()
-            .filter(Q(receiver=self.request.user) | Q(sender=self.request.user))
+            .filter(
+                Q(receiver=self.request.user) | Q(sender=self.request.user)
+            )
         )
 
     @action(
@@ -77,7 +79,7 @@ class MessageContacts(ListAPIView):
         )
         user_ids_list = list(sum(user_receiver_sender_ids, ()))
         user_ids = set(user_ids_list)  # Get unique ids
-        user_ids.remove(self.request.user.id)
+        user_ids.discard(self.request.user.id)
 
         queryset = User.objects.filter(id__in=user_ids)
         serializer = self.get_serializer(queryset, many=True)

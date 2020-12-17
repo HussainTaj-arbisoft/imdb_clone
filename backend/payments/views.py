@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.conf import settings
 
 from accounts.models import User
 from movies.models import Movie
@@ -23,15 +24,21 @@ class CreatePaymentSessionAPIView(APIView):
     def post(self, request, *args, **kwargs):
         movie_id = request.data.get("movie_id")
         movie = get_object_or_404(Movie, pk=movie_id)
-        MY_DOMAIN = f"http://localhost:3000/movie/{movie_id}/"
+        movie_home_url = (
+            f"https://{ settings.ALLOWED_HOSTS[0]}/movie/{movie_id}/"
+        )
 
-        order = Order.objects.filter(movie_id=movie_id, user=self.request.user).first()
+        order = Order.objects.filter(
+            movie_id=movie_id, user=self.request.user
+        ).first()
 
         if order is None:
             order = Order(movie_id=movie_id, user=self.request.user)
 
         if order.completed:
-            return Response(JSONRenderer().render({"detail": "Already Bought."}))
+            return Response(
+                JSONRenderer().render({"detail": "Already Bought."})
+            )
 
         try:
             checkout_session = stripe.checkout.Session.create(
@@ -43,15 +50,17 @@ class CreatePaymentSessionAPIView(APIView):
                             "unit_amount_decimal": movie.price * 100,
                             "product_data": {
                                 "name": movie.title,
-                                "images": ["https://i.imgur.com/EHyR2nP.png"],
+                                "images": [
+                                    f"https://{settings.ALLOWED_HOSTS[0]}{movie.poster_image.url}",
+                                ],
                             },
                         },
                         "quantity": 1,
                     },
                 ],
                 mode="payment",
-                success_url=MY_DOMAIN + "?success=true",
-                cancel_url=MY_DOMAIN + "?canceled=true",
+                success_url=movie_home_url + "?success=true",
+                cancel_url=movie_home_url + "?canceled=true",
             )
             order.price = movie.price
             order.session_id = checkout_session.id
@@ -59,8 +68,8 @@ class CreatePaymentSessionAPIView(APIView):
             return Response(JSONRenderer().render({"id": checkout_session.id}))
         except Exception as e:
             return Response(
-                JSONRenderer().render({"error": str(e)}),
-                status=status.HTTP_403_FORBIDDEN,
+                JSONRenderer().render({"error": str(e.http_body)}),
+                status=e.http_status,
             )
 
 
@@ -69,7 +78,9 @@ class UserOwnsMovieAPIView(APIView):
 
     def post(self, request, *args, **kwargs):
         movie_id = request.data.get("movie_id")
-        order = Order.objects.filter(movie_id=movie_id, user=request.user).first()
+        order = Order.objects.filter(
+            movie_id=movie_id, user=request.user
+        ).first()
 
         if order is not None and order.completed:
             return Response(JSONRenderer().render({"owned": "yes"}))
@@ -80,7 +91,7 @@ class UserOwnsMovieAPIView(APIView):
 # Set your secret key. Remember to switch to your live secret key in production!
 # See your keys here: https://dashboard.stripe.com/account/apikeys
 stripe.api_key = "sk_test_51HyMdNA2mXrNBb00pzzVXwTxE2FRfmsKWvjNfu9zY43acRHaJiTBXFSw4KZXl05Q6bzfZhhQNerBx2LUTMLJGqIZ007NMiMDJV"
-endpoint_secret = "whsec_TsRwG2dBQpqUgLtvY4M7s2zxKILyacWx"
+endpoint_secret = "whsec_H4LB691IcCqm5AdHrNO9KARjOlmqQcRk"
 
 
 @csrf_exempt
@@ -89,7 +100,9 @@ def stripe_webhook(request):
     sig_header = request.META["HTTP_STRIPE_SIGNATURE"]
     event = None
     try:
-        event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, endpoint_secret
+        )
     except ValueError as e:
         # Invalid payload
         return HttpResponse(status=400, content=str(e))

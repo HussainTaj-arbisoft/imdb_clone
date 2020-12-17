@@ -54,7 +54,7 @@ def _random_date(
     return random_date
 
 
-def seed_user(users_count: int = 20):
+def seed_user(users_count: int = 10):
     print(f"\nSeeding {users_count} users...")
     for user_number in range(users_count):
         user = User(
@@ -70,11 +70,13 @@ def seed_user(users_count: int = 20):
         user.last_seen = make_aware(fake.date_time_this_year())
         user.save()
 
-        print(f"Progress: {((user_number+1)/users_count * 100):.2f}%", end="\r")
+        print(
+            f"Progress: {((user_number+1)/users_count * 100):.2f}%", end="\r"
+        )
     print()
 
 
-def seed_movie(movie_count: int = 500):
+def seed_movie(movie_count: int = 200):
     trailers = [
         "movies/dummy/trailers/dummy-trailer-1.mp4",
         "movies/dummy/trailers/dummy-trailer-2.mp4",
@@ -117,7 +119,9 @@ def seed_movie(movie_count: int = 500):
             image.save()
             counter += 1
 
-        print(f"Progress: {((movie_number+1)/movie_count * 100):.2f}%", end="\r")
+        print(
+            f"Progress: {((movie_number+1)/movie_count * 100):.2f}%", end="\r"
+        )
     print()
 
 
@@ -141,7 +145,7 @@ def seed_superuser():
     print("Password: ^YHN7ujm")
 
 
-def seed_celebrities(celebrity_count: int = 50):
+def seed_celebrities(celebrity_count: int = 10):
     print(f"\nSeeding {celebrity_count} celebrities...")
     for celebrity_number in range(celebrity_count):
         celeb = Celebrity(
@@ -171,7 +175,7 @@ def seed_movie_crew():
 
     print(f"\nSeeding {movies_count} movies with crew...")
     for movie in movies:
-        crew_count = random.randint(5, 15)
+        crew_count = random.randint(4, 7)
         movie_celebrities = random.sample(celebrities, crew_count)
         for crewmate_number in range(crew_count):
             crewmate = MovieCrew(
@@ -197,7 +201,7 @@ def seed_user_rating_and_reviews():
 
     print(f"\nSeeding {movies_count} movies with ratings and reviews...")
     for movie in movies:
-        rating_count = random.randint(5, 15)
+        rating_count = random.randint(4, 10)
         sample_users = random.sample(list(users), rating_count)
         for rating_number in range(rating_count):
             user_rating = UserMovieRating(
@@ -223,7 +227,7 @@ def seed_user_rating_and_reviews():
     print()
 
 
-def seed_messages(range_count: (int, int) = (3, 10)):
+def seed_messages(range_count: (int, int) = (3, 5)):
     users = list(User.objects.all())
     users_count = len(users)
     user_number = 0
