@@ -31,13 +31,19 @@ class UserChat extends Component {
       this.scrollToBottom();
     };
     this.chatServiceInstance.onError = (event) => {
-      this.safeSetState({ status: "error" });
+      this.safeSetState({ messagesStatus: "error" });
       console.error(event);
     };
     this.chatServiceInstance.onDisconnect = (event) => {
-      this.safeSetState({ status: "error" });
+      this.safeSetState({ messagesStatus: "error" });
       console.log("connection closed");
     };
+    this.chatServiceInstance.onConnectFail = () => {
+      this.safeSetState({
+        messagesStatus: "error",
+        errorMessage: "Unable to connect to the chat server."
+      });
+    }
     this.chatServiceInstance.onOpen = (event) => {
       this.safeSetState({ messagesStatus: "loading" });
       this.chatServiceInstance.sendAllMessagesRequest();
@@ -49,7 +55,8 @@ class UserChat extends Component {
     message: "",
     receivedMessages: [],
     user_info: {},
-    messagesStatus: "loaded",
+    messagesStatus: "loading",
+    errorMessage: "Connection lost unexpected. Try refreshing."
   };
 
   safeSetState(state) {
@@ -95,19 +102,6 @@ class UserChat extends Component {
   render() {
     if (!this.props.auth.isAuthenticated) {
       return <p>Sorry, this area is only for signed in users.</p>;
-    }
-
-    if (this.chatServiceInstance.isClosed()
-      && this.state.messagesStatus === "loaded") {
-      return (
-        <div>
-          <Header />
-          <p className="text-light text-center">
-            Connection is closed. If chat doesn't connect for 30 seconds,
-            please try reloading the tab, or contact the developer.
-          </p>
-        </div>
-      );
     }
 
     let userInfo = this.state.user_info;
@@ -162,9 +156,9 @@ class UserChat extends Component {
         <Header />
         <StatusBasedComponent
           status={this.state.messagesStatus}
-          bottomText="Loading your messages..."
+          loadingText="Loading your messages..."
           className="text-light"
-          errorMessage="Connection lost unexpected. Try refreshing."
+          errorMessage={this.state.errorMessage}
         >
           <div
             className="container d-flex flex-column justify-content-between"
