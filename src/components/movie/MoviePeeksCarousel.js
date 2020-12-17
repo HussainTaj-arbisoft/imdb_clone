@@ -127,7 +127,9 @@ class MoviePeeksCarousel extends Component {
                   alt={movie.title}
                 />
                 <div className="d-flex align-items-end swiper-slide-caption">
-                  <img src={movie.poster_image} alt="Poster" height="150" />
+                  <img src={movie.poster_image} alt="Poster" height="150"
+                    className="d-none d-md-block"
+                  />
                   <div className="px-4 w-100 d-flex align-items-center">
                     <div className="d-none d-sm-block">
                       {playCircleIconButton}
