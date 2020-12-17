@@ -35,28 +35,46 @@ class SearchBar extends Component {
     let searchResultContent = movies.map((movie) => (
       <Link
         to={`/movie/${movie.id}`}
-        className="text-decoration-none"
+        className="hyperlinkCard"
         key={movie.id}
       >
-        <div className="d-flex m-2 align-items-center shadow rounded">
-          <img src={movie.poster_image} width="70" alt="poster" />
+        <div className="d-flex flex-column flex-md-row mx-2 my-2 align-items-center shadow rounded">
+          <div
+            style={{
+              background: `#000 url(${movie.cover_image}) no-repeat left top`,
+              backgroundSize: 'cover'
+            }}
+            className={`rounded ${styles.searchBarResultPoster} position-relative d-block d-md-none `}
+          >
+            <img src={movie.poster_image} width="70" alt="poster"
+              className="shadow-sm m-2"
+            />
+          </div>
+          <div>
+            <img src={movie.poster_image} width="70" alt="poster"
+              className="shadow-sm m-2 d-none d-md-block"
+            />
+          </div>
           <div className="w-100 align-self-start p-2">
             <p>
               <b>{movie.title}</b>
             </p>
-            <p>{new Date(movie.release_date).getFullYear().toString()}</p>
+            <p className="mb-0">{new Date(movie.release_date).getFullYear().toString()}</p>
             <small className="py-0">
-              <span className="fa fa-play mr-2"></span>
-              {movie.trailers.length} Trailers
-              <span className="fa fa-photo ml-4 mx-2"></span>
-              {movie.images.length} Images
+              <span className="text-nowrap mr-2">
+                <span className="fa fa-play mx-2"></span>
+                {movie.trailers.length} Trailers
+              </span>
+              <span className="text-nowrap">
+                <span className="fa fa-photo mx-2"></span>
+                {movie.images.length} Images
+              </span>
             </small>
           </div>
           <p className="text-nowrap mb-0 mr-4">
-            <span className="fa fa-star text-primary"></span>{" "}
+            <span className="fa fa-star text-primary mr-2"></span>
             {movie.average_user_rating}
           </p>
-          <hr />
         </div>
       </Link>
     ));
