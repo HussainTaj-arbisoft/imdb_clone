@@ -9,6 +9,10 @@ class ChatService {
   onDisconnect = null;
   onOpen = null;
   onError = null;
+  onConnectFail = null;
+  connectFailTimeoutHandle = null;
+  connectFailTimeout = 10000;
+  connectResponseReceived = null;
 
   connect(userId, authToken) {
     if (this.socket !== null) {
@@ -20,6 +24,9 @@ class ChatService {
     this.socket.onclose = this.disconnect.bind(this);
     this.socket.onerror = this._onError.bind(this);
     this.socket.onopen = this._onOpen.bind(this);
+    this.connectFailTimeoutHandle = setTimeout(
+      this._onConnectFailTimeout.bind(this),
+      this.connectFailTimeout);
   }
 
   disconnect(event) {
@@ -28,6 +35,7 @@ class ChatService {
     }
     this.socket = null;
     if (this.onDisconnect) this.onDisconnect(event);
+    this._onConnectResponseReceived()
   }
 
   isClosed() {
@@ -79,10 +87,25 @@ class ChatService {
 
   _onOpen(event) {
     if (this.onOpen) this.onOpen(event);
+    this._onConnectResponseReceived()
   }
 
   _onError(event) {
     if (this.onError) this.onError(event);
+    this._onConnectResponseReceived()
+  }
+
+  _onConnectResponseReceived() {
+    this.connectResponseReceived = true;
+    if (this.connectFailTimeoutHandle) {
+      clearTimeout(this.connectFailTimeoutHandle)
+      this.connectFailTimeoutHandle = null;
+    }
+  }
+
+  _onConnectFailTimeout() {
+    if (this.connectResponseReceived !== true && this.onConnectFail)
+      this.onConnectFail()
   }
 
   sendMessage(message) {
