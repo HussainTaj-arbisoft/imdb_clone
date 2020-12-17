@@ -3,5 +3,6 @@ $theme-colors: (
   "dark": #121212,
   "info": #0275d8,
 );
+$enable-responsive-font-sizes: true;
 // Bootstrap and its default variables
 @import "node_modules/bootstrap/scss/bootstrap";
