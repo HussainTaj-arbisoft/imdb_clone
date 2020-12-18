@@ -38,9 +38,13 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-    email = models.EmailField(verbose_name="Email", max_length=255, unique=True)
+    email = models.EmailField(
+        verbose_name="Email", max_length=255, unique=True
+    )
     is_admin = models.BooleanField(default=False)
-    last_seen = models.DateTimeField("Last Seen", auto_now=False, auto_now_add=True)
+    last_seen = models.DateTimeField(
+        "Last Seen", auto_now=False, auto_now_add=True
+    )
 
     REQUIRED_FIELDS = ["first_name", "last_name"]
     USERNAME_FIELD = "email"
@@ -51,9 +55,12 @@ class User(AbstractUser):
 
     def save(self, *args, **kwargs):
         self.username = self.email
-        if self.profile is None:
-            Profile.objects.create(user=self)
         super(User, self).save(*args, **kwargs)
+        try:
+            self.profile = self.profile
+        except Profile.DoesNotExist:
+            profile = Profile.objects.create(user=self)
+            profile.save()
 
     def has_perm(self, perm, obj=None):
         return True
