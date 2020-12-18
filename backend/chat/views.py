@@ -27,9 +27,7 @@ class MessageViewSet(GenericViewSet, ListModelMixin):
         return (
             super()
             .get_queryset()
-            .filter(
-                Q(receiver=self.request.user) | Q(sender=self.request.user)
-            )
+            .filter(Q(receiver=self.request.user) | Q(sender=self.request.user))
         )
 
     @action(

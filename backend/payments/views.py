@@ -9,7 +9,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.conf import settings
 
 from accounts.models import User
 from movies.models import Movie
@@ -24,21 +23,15 @@ class CreatePaymentSessionAPIView(APIView):
     def post(self, request, *args, **kwargs):
         movie_id = request.data.get("movie_id")
         movie = get_object_or_404(Movie, pk=movie_id)
-        movie_home_url = (
-            f"https://{ settings.ALLOWED_HOSTS[0]}/movie/{movie_id}/"
-        )
+        movie_home_url = f"https://{ settings.ALLOWED_HOSTS[0]}/movie/{movie_id}/"
 
-        order = Order.objects.filter(
-            movie_id=movie_id, user=self.request.user
-        ).first()
+        order = Order.objects.filter(movie_id=movie_id, user=self.request.user).first()
 
         if order is None:
             order = Order(movie_id=movie_id, user=self.request.user)
 
         if order.completed:
-            return Response(
-                JSONRenderer().render({"detail": "Already Bought."})
-            )
+            return Response(JSONRenderer().render({"detail": "Already Bought."}))
 
         try:
             checkout_session = stripe.checkout.Session.create(
@@ -78,9 +71,7 @@ class UserOwnsMovieAPIView(APIView):
 
     def post(self, request, *args, **kwargs):
         movie_id = request.data.get("movie_id")
-        order = Order.objects.filter(
-            movie_id=movie_id, user=request.user
-        ).first()
+        order = Order.objects.filter(movie_id=movie_id, user=request.user).first()
 
         if order is not None and order.completed:
             return Response(JSONRenderer().render({"owned": "yes"}))
@@ -100,9 +91,7 @@ def stripe_webhook(request):
     sig_header = request.META["HTTP_STRIPE_SIGNATURE"]
     event = None
     try:
-        event = stripe.Webhook.construct_event(
-            payload, sig_header, endpoint_secret
-        )
+        event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
     except ValueError as e:
         # Invalid payload
         return HttpResponse(status=400, content=str(e))

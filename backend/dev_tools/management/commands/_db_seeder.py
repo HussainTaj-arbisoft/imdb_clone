@@ -70,9 +70,7 @@ def seed_user(users_count: int = 10):
         user.last_seen = make_aware(fake.date_time_this_year())
         user.save()
 
-        print(
-            f"Progress: {((user_number+1)/users_count * 100):.2f}%", end="\r"
-        )
+        print(f"Progress: {((user_number+1)/users_count * 100):.2f}%", end="\r")
     print()
 
 
@@ -119,9 +117,7 @@ def seed_movie(movie_count: int = 200):
             image.save()
             counter += 1
 
-        print(
-            f"Progress: {((movie_number+1)/movie_count * 100):.2f}%", end="\r"
-        )
+        print(f"Progress: {((movie_number+1)/movie_count * 100):.2f}%", end="\r")
     print()
 
 
