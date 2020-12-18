@@ -141,6 +141,39 @@ export const signIn = (email, password) => (dispatch) => {
     });
 };
 
+export const socialSignIn = (accessToken, provider) => (dispatch) => {
+  dispatch(signInRequest());
+  axios.post(
+    `${AUTH_SERVER_API_URL}/rest-auth/${provider}/`,
+    {
+      access_token: accessToken,
+    },
+    {
+      headers: {
+        "X-CSRFToken": new Cookies().get("csrftoken")
+      }
+    }
+  ).then((response) => {
+    console.log(response);
+    let token = response.data.key;
+    signInWithToken(token)(dispatch)
+  }).catch(({ response }) => {
+    console.log(response);
+    let { status, statusText, data } = response;
+    dispatch({
+      type: types.AUTH_SIGNIN_RESPONSE,
+      payload: {
+        signIn: {
+          isSigningIn: false,
+          status,
+          statusText,
+          data,
+        },
+      },
+    });
+  });
+};
+
 export const signUp = (firstName, lastName, email, password, repassword) => (
   dispatch
 ) => {

@@ -6,6 +6,8 @@ import { Link, Redirect } from "react-router-dom";
 import * as authActions from "../../store/actions/authActions";
 import logo from "../../logo.svg";
 import CircularProgressIndicator from "../layout/CircularProgressIndicator";
+import SocialButton from "./SocialButton";
+
 
 class SignIn extends Component {
   state = {
@@ -31,46 +33,69 @@ class SignIn extends Component {
       return <CircularProgressIndicator bottomText="Signing In..." />;
     }
     return (
-      <Form>
-        <div className="form-group">
-          <label htmlFor="email" className="form-label">
-            Email
+      <div>
+        <Form>
+          <div className="form-group">
+            <label htmlFor="email" className="form-label">
+              Email
           </label>
-          <Field
-            id="email"
-            name="email"
-            placeholder="someone@example.com"
-            type="email"
-            className="form-control form-control-sm"
-            required="required"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password" className="form-label">
-            Password
+            <Field
+              id="email"
+              name="email"
+              placeholder="someone@example.com"
+              type="email"
+              className="form-control form-control-sm"
+              required="required"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password" className="form-label">
+              Password
           </label>
-          <Field
-            id="password"
-            name="password"
-            type="password"
-            className="form-control form-control-sm"
-            required="required"
-          />
-        </div>
-        <div className="text-center">
-          <button type="submit" className="btn btn-primary">
-            Sign In
+            <Field
+              id="password"
+              name="password"
+              type="password"
+              className="form-control form-control-sm"
+              required="required"
+            />
+          </div>
+          <div className="text-center">
+            <button type="submit" className="btn btn-primary">
+              Sign In
           </button>
-        </div>
-        {this.props.status ? this._renderStatusCodeMessage() : null}
-        <div className="text-center mt-2">
-          <Link to="/auth/signup" className="text-info">
-            Don't have an account? Create new.
+          </div>
+          {this.props.status ? this._renderStatusCodeMessage() : null}
+          <div className="text-center mt-2">
+            <Link to="/auth/signup" className="text-info">
+              Don't have an account? Create new.
           </Link>
-        </div>
-      </Form>
+          </div>
+
+        </Form>
+        <SocialButton
+          provider='facebook'
+          appId='412133589934206'
+          onLoginSuccess={this.fbResponse}
+          onLoginFailure={(e) => console.log(e)}
+          button="facebook"
+        />
+        <SocialButton
+          provider='google'
+          appId='745121207429-rjumns38f3ksr6ahprmja5ks5tn0puni.apps.googleusercontent.com'
+          onLoginSuccess={this.googleResponse}
+          onLoginFailure={(e) => console.log(e)}
+          button="google"
+        />
+      </div>
     );
   };
+  fbResponse = (response) => {
+    this.props.socialSignIn(response._token.accessToken, "facebook");
+  }
+  googleResponse = (response) => {
+    this.props.socialSignIn(response._token.accessToken, "google");
+  }
 
   _renderStatusCodeMessage = () => {
     switch (this.props.status) {
@@ -83,7 +108,7 @@ class SignIn extends Component {
           </div>
         );
       default:
-        return this.props.statusText;
+        return null;
     }
   };
 
@@ -96,6 +121,7 @@ class SignIn extends Component {
       email: "",
       password: "",
     };
+
     return (
       <div className="container p-4">
         <div className="text-center">
@@ -136,6 +162,7 @@ const mapStateToProps = (state) => {
 
 const signInActions = {
   signIn: authActions.signIn,
+  socialSignIn: authActions.socialSignIn
 };
 
 export default connect(mapStateToProps, signInActions)(SignIn);
