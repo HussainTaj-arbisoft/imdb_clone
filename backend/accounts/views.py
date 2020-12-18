@@ -1,4 +1,9 @@
+from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from django.utils import timezone
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from rest_auth.registration.views import SocialLoginView
 from rest_framework.decorators import action
 from rest_framework.mixins import ListModelMixin
 from rest_framework.pagination import LimitOffsetPagination
@@ -31,3 +36,11 @@ class UpdateLastSeen(APIView):
         request.user.save()
 
         return Response(request.user.last_seen)
+
+
+class FacebookLogin(SocialLoginView):
+    adapter_class = FacebookOAuth2Adapter
+
+
+class GoogleLogin(SocialLoginView):
+    adapter_class = GoogleOAuth2Adapter

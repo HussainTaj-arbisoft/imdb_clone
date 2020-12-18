@@ -13,8 +13,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os
 from pathlib import Path
 
-import django_heroku
 import dj_database_url
+import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -36,8 +36,8 @@ ALLOWED_HOSTS = [
     "0.0.0.0",
 ]
 
-# SECURE_SSL_REDIRECT = True  # [1]
-# SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SECURE_SSL_REDIRECT = True  # [1]
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Application definition
 
@@ -55,6 +55,15 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "djoser",
     "channels",
+    "corsheaders",
+    ## social login
+    "django.contrib.sites",
+    "allauth",
+    "allauth.account",
+    "rest_auth.registration",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.facebook",
+    "allauth.socialaccount.providers.google",
     # Custom
     "accounts",
     "movies",
@@ -63,9 +72,11 @@ INSTALLED_APPS = [
     "payments",
     # Dev
     "dev_tools",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -158,6 +169,9 @@ STATICFILES_DIRS = [
 
 
 AUTH_USER_MODEL = "accounts.User"
+SOCIAL_AUTH_USER_MODEL = "accounts.User"
+SITE_ID = 1
+
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -211,3 +225,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, "build", "static")
 # MEDIA_ROOT = os.path.join(BASE_DIR, "build", "media")
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+CORS_ORIGIN_ALLOW_ALL = True
