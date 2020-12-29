@@ -1,4 +1,4 @@
-FROM nikolaik/python-nodejs:python3.8-nodejs14
+FROM python:3.8
 ENV PYTHONUNBUFFERED=1
 
 WORKDIR /code
@@ -7,14 +7,10 @@ WORKDIR /code
 COPY ./requirements.txt /code/requirements.txt
 RUN pip install -r requirements.txt
 
-# Install node dependencies 
-COPY ./package.json /code/package.json
-RUN npm install
-
-COPY . /code/
-
-# Build React Source
-RUN npm run build
+# Copy backend code
+COPY ./backend/ /code/backend/
+COPY ./manage.py /code/manage.py
+COPY ./media/ /code/media/
 
 # Apply Migrations / Create DB
 RUN python manage.py migrate
