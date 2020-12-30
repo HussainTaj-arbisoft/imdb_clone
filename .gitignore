@@ -34,14 +34,12 @@ build/
 # Editors
 .vscode/
 
-
-
 # Cache
 __pycache__/
 
+# A test dev db
 db.sqlite3
 
+# Secret enviornment variable files
 
-
-
-
+*.secret.env
