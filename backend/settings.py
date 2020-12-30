@@ -113,11 +113,15 @@ WSGI_APPLICATION = "backend.wsgi.application"
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
+    # "default": {
+    #     "ENGINE": "django.db.backends.postgresql_psycopg2",
+    #     "NAME": "imdb",
+    #     "USER": "imdb",
+    #     "PASSWORD": "imdb",
+    # },
     "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "ENGINE": "django.db.backends.sqlite3",
         "NAME": "imdb",
-        "USER": "imdb",
-        "PASSWORD": "imdb",
     }
 }
 db_from_env = dj_database_url.config(conn_max_age=600)
