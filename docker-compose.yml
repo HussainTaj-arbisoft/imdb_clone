@@ -7,8 +7,9 @@ services:
     restart: always
     volumes:
       - imdb_data:/var/lib/mysql
-    env_file: 
-      - ./db.secret.env
+    environment: 
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
   web:
     build: .
     command: python manage.py runserver_plus 0.0.0.0:8000 --cert-file /tmp/cert.crt
