@@ -1,0 +1,24 @@
+version: "3.9"
+   
+services:
+  db:
+    image: mysql:8
+    command: mysqld --default-authentication-plugin=mysql_native_password
+    restart: always
+    volumes:
+      - imdb_data:/var/lib/mysql
+    environment: 
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+  web:
+    build: .
+    command: python manage.py runserver_plus 0.0.0.0:8000 --cert-file /tmp/cert.crt
+    volumes:
+      - ./media/:/code/media/
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+volumes: 
+  imdb_data:
